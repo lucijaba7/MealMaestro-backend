@@ -1,201 +1,215 @@
 {
-    "recipes": [
-        {        
-            "id": "1wrhweiwh37093",
-            "name": "Tomato, Peach, and Basil Salad",
-            "image": "fadgsfw",
-            "meal_type": "Lunch",
-            "servings": 4,
-            "total_time": 20,
-            "user": "mamaMia",
-            "ingredients_list": [
-                {
-                    "ingredient_name": "Tomato",
-                    "quantity": 2,
-                    "unit": "kg"
-                },
-                {
-                    "ingredient_name": "Basil",
-                    "quantity": 0.5,
-                    "unit": "kg"
-                }
-            ],
-            "directions": "In small bowl, combine onion and vinegar with 1/4 teaspoon salt. Let sit 5 minutes.Cut tomatoes and peaches into wedges and arrange on platter.Stir oil into onion mixture and spoon over fruit, then sprinkle with basil, feta, and cracked black pepper.  In small bowl, combine onion and vinegar with 1/4 teaspoon salt. Let sit 5 minutes. Cut tomatoes and peaches into wedges and arrange on platter. \n Stir oil into onion mixture and spoon over fruit, then sprinkle with basil, feta, and cracked black pepper.  In small bowl, combine onion and vinegar with 1/4 teaspoon salt. Let sit 5 minutes. Cut tomatoes and peaches into wedges and arrange on platter. Stir oil into onion mixture and spoon over fruit, then sprinkle with basil, feta, and cracked black pepper.  ",
-            "tags": ["low-fat", "vegeterian"],
-            "date": "03-11-2021",
-            "published": true,
-            "ratings": [
-                { 
-                    "rate": 5.0,
-                    "date": "05-01-2021",
-                    "user": "thors_ladle"
-                },
-                { 
-                    "rate": 4.0,
-                    "date": "21-11-2021",
-                    "user": "cuspajzz"
-                },
-                { 
-                    "rate": 2.0,
-                    "date": "12-03-2021",
-                    "user": "masna_kopriva"
-                }
-            ]     
-        }
-    ],
-    "user": {
-        "user_name": "kuharica",
-        "avatar": "aikdiafnaiodwjpa",
-        "name": "Laura",
-        "last_name": "Smjeskic",
-        "email": "laura@gmail.com",
-        "password": "adjH6jnkU",
-        "recipes": ["1wrhweiwh37093", "skefnisehaio849nfies"],
-        "saved_recipe": ["ioehfi8439ha", "jsenfnaow8668"],
-        "settings": {
-            "last_updated": "04-12-2021",
-            "meal": [
-                {
-                    "meal_type": "Breakfast",
-                    "days_of_week": ["Monday", "Tuesday", "Friday"],
-                    "servings": 4,
-                    "average_time": 50
-                },
-                {
-                    "meal_type": "Lunch",
-                    "days_of_week": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                    "servings": 6,
-                    "average_time": 120
-                }
-            ],
-            "exception": [
-                {
-                    "meal_type": "Lunch",
-                    "days_of_week": ["Sunday"],
-                    "servings": 10,
-                    "average_time": 180,
-                    "new_recipe": true
-                },
-                {
-                    "meal_type": "Lunch",
-                    "days_of_week": ["Sunday", "Wednesday", "Saturday"],
-                    "average_time": 180,
-                    "new_recipe": true,
-                    "tags": ["Vegeterian"]
-                }
-            ],
-            "general_settings": [
-                {
-                    "whose_meals": "Both",
-                    "new_recipes": "1-2 times a week",
-                    "tags": ["Gluten-free"]
-                }
-            ]
-        }
-    },
-    "weakly_plan": {
-        "start_day": "16-07-2021",
-        "confirm": false,
-        "daily_meal": [
-            {
-                "day": "Monday",
-                "meals": [
-                    {
-                        "recipe_id": "1wrhweiwh37093",
-                        "cooked": true,
-                        "servings": 4
-                    },
-                    {
-                        "recipe_id": "siefiehfn73k",
-                        "cooked": true,
-                        "servings": 4
-                    },
-                    {
-                        "recipe_id": "SKFKkfnes7626",
-                        "cooked": false,
-                        "servings": 4
-                    }
-                ]
-            },
-            {
-                "day": "Tuesday",
-                "meals": [
-                    {
-                        "recipe_id": "747tfhHFIQ", 
-                        "cooked": false,
-                        "servings": 4
-                    },
-                    {
-                        "recipe_id": "srfn483ifvo", 
-                        "cooked": false,
-                        "servings": 4
-                    },
-                    {
-                        "recipe_id": "FJOJAo48truns", 
-                        "cooked": false,
-                        "servings": 4
-                    },
-                    {
-                        "recipe_id": "iehfieh3829ej",
-                        "cooked": false,
-                        "servings": 6
-                    }
-                ]
-            },
-            {
-                "day": "Sunday",
-                "meals": [
-                    {
-                        "recipe_id": "sefgtr532",
-                        "cooked": false,
-                        "servings": 2
-                    }
-                ]
-            }
-        ],
-        "shopping_list": {
-            "finished": false,
-            "list_items": [ 
-            {
-                "ingredient_name": "Tomato",
-                "quantity": 2,
-                "unit": "kg",
-                "bought": true
-            },
-            {
-                "ingredient_name": "Basil",
-                "quantity": 0.5,
-                "unit": "kg",
-                "bought": false
-            }
-            ]                     
-        }
-    },
-    "fridge":  [
+  "recipes": [
+    {
+      "id": "1wrhweiwh37093",
+      "name": "Tomato, Peach, and Basil Salad",
+      "image": "fadgsfw",
+      "meal_type": "Lunch",
+      "servings": 4,
+      "total_time": 20,
+      "username": "mamaMia",
+      "ingredients_list": [
         {
-            "category" : "Vegetables",
-            "ingredients": [
-                {
-                    "name": "Tomato",
-		            "quantity": 5.0,
-                    "unit": "kg"
-                },
-                {
-                    "name": "Potato",
-                    "quantity": 10.0,
-                    "unit": "kg"
-                }
-            ]
+          "ingredient_name": "Tomato",
+          "quantity": 2,
+          "unit": "kg"
         },
         {
-            "category": "Spices and Herbs",
-            "ingredients": [
-                {
-                    "name": "Cumin",
-                    "quantity": 0.25,
-                    "unit": "kg" 
-                }
-            ]    
+          "ingredient_name": "Basil",
+          "quantity": 0.5,
+          "unit": "kg"
         }
-    ]
+      ],
+      "directions": "In small bowl, combine onion and vinegar with 1/4 teaspoon salt. Let sit 5 minutes.Cut tomatoes and peaches into wedges and arrange on platter.Stir oil into onion mixture and spoon over fruit, then sprinkle with basil, feta, and cracked black pepper.  In small bowl, combine onion and vinegar with 1/4 teaspoon salt. Let sit 5 minutes. Cut tomatoes and peaches into wedges and arrange on platter. \n Stir oil into onion mixture and spoon over fruit, then sprinkle with basil, feta, and cracked black pepper.  In small bowl, combine onion and vinegar with 1/4 teaspoon salt. Let sit 5 minutes. Cut tomatoes and peaches into wedges and arrange on platter. Stir oil into onion mixture and spoon over fruit, then sprinkle with basil, feta, and cracked black pepper.  ",
+      "tags": ["low-fat", "vegeterian"],
+      "date": "03-11-2021",
+      "published": true,
+      "ratings": [
+        {
+          "rate": 5.0,
+          "date": "05-01-2021",
+          "username": "thors_ladle"
+        },
+        {
+          "rate": 4.0,
+          "date": "21-11-2021",
+          "username": "cuspajzz"
+        },
+        {
+          "rate": 2.0,
+          "date": "12-03-2021",
+          "username": "masna_kopriva"
+        }
+      ]
+    }
+  ],
+  "user": [
+    {
+      "username": "kuharica",
+      "avatar": "aikdiafnaiodwjpa",
+      "name": "Laura",
+      "last_name": "Smjeskic",
+      "email": "laura@gmail.com",
+      "password": "adjH6jnkU",
+      "recipes": ["1wrhweiwh37093", "skefnisehaio849nfies"],
+      "saved_recipe": ["ioehfi8439ha", "jsenfnaow8668"],
+      "following": ["sweetAmy", ""],
+      "settings": {
+        "last_updated": "04-12-2021",
+        "meal": [
+          {
+            "meal_type": "Breakfast",
+            "days_of_week": ["Monday", "Tuesday", "Friday"],
+            "servings": 4,
+            "average_time": 50
+          },
+          {
+            "meal_type": "Lunch",
+            "days_of_week": [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday"
+            ],
+            "servings": 6,
+            "average_time": 120
+          }
+        ],
+        "exception": [
+          {
+            "meal_type": "Lunch",
+            "days_of_week": ["Sunday"],
+            "servings": 10,
+            "average_time": 180,
+            "new_recipe": true
+          },
+          {
+            "meal_type": "Lunch",
+            "days_of_week": ["Sunday", "Wednesday", "Saturday"],
+            "average_time": 180,
+            "new_recipe": true,
+            "tags": ["Vegeterian"]
+          }
+        ],
+        "general_settings": [
+          {
+            "whose_meals": "Both",
+            "new_recipes": "1-2 times a week",
+            "tags": ["Gluten-free"]
+          }
+        ]
+      }
+    }
+  ],
+  "weekly_plan": [
+    {
+      "username": "kuharica",
+      "start_day": "16-07-2021",
+      "confirm": false,
+      "daily_meal": [
+        {
+          "day": "Monday",
+          "meals": [
+            {
+              "recipe_id": "1wrhweiwh37093",
+              "cooked": true,
+              "servings": 4
+            },
+            {
+              "recipe_id": "siefiehfn73k",
+              "cooked": true,
+              "servings": 4
+            },
+            {
+              "recipe_id": "SKFKkfnes7626",
+              "cooked": false,
+              "servings": 4
+            }
+          ]
+        },
+        {
+          "day": "Tuesday",
+          "meals": [
+            {
+              "recipe_id": "747tfhHFIQ",
+              "cooked": false,
+              "servings": 4
+            },
+            {
+              "recipe_id": "srfn483ifvo",
+              "cooked": false,
+              "servings": 4
+            },
+            {
+              "recipe_id": "FJOJAo48truns",
+              "cooked": false,
+              "servings": 4
+            },
+            {
+              "recipe_id": "iehfieh3829ej",
+              "cooked": false,
+              "servings": 6
+            }
+          ]
+        },
+        {
+          "day": "Sunday",
+          "meals": [
+            {
+              "recipe_id": "sefgtr532",
+              "cooked": false,
+              "servings": 2
+            }
+          ]
+        }
+      ],
+      "shopping_list": {
+        "finished": false,
+        "list_items": [
+          {
+            "ingredient_name": "Tomato",
+            "quantity": 2,
+            "unit": "kg",
+            "bought": true
+          },
+          {
+            "ingredient_name": "Basil",
+            "quantity": 0.5,
+            "unit": "kg",
+            "bought": false
+          }
+        ]
+      }
+    }
+  ],
+  "fridge": [
+    {
+      "category": "Vegetables",
+      "ingredients": [
+        {
+          "name": "Tomato",
+          "quantity": 5.0,
+          "unit": "kg"
+        },
+        {
+          "name": "Potato",
+          "quantity": 10.0,
+          "unit": "kg"
+        }
+      ]
+    },
+    {
+      "category": "Spices and Herbs",
+      "ingredients": [
+        {
+          "name": "Cumin",
+          "quantity": 0.25,
+          "unit": "kg"
+        }
+      ]
+    }
+  ]
 }
