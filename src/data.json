@@ -7,7 +7,7 @@
       "meal_type": "Lunch",
       "servings": 4,
       "total_time": 20,
-      "username": "mamaMia",
+      "username": "kuharica",
       "ingredients_list": [
         {
           "ingredient_name": "Tomato",
@@ -53,7 +53,7 @@
       "password": "adjH6jnkU",
       "recipes": ["1wrhweiwh37093", "skefnisehaio849nfies"],
       "saved_recipe": ["ioehfi8439ha", "jsenfnaow8668"],
-      "following": ["sweetAmy", ""],
+      "following": ["sweetAmy"],
       "settings": {
         "last_updated": "04-12-2021",
         "meal": [
@@ -187,18 +187,21 @@
   ],
   "fridge": [
     {
-      "category": "Vegetables",
-      "ingredients": [
-        {
-          "name": "Tomato",
-          "quantity": 5.0,
-          "unit": "kg"
-        },
-        {
-          "name": "Potato",
-          "quantity": 10.0,
-          "unit": "kg"
-        }
+    "username": "kuharica",
+    "fridge_items":  [  
+      {
+        "category": "Vegetables",
+        "ingredients": [
+          {
+            "name": "Tomato",
+            "quantity": 5.0,
+            "unit": "kg"
+          },
+          {
+            "name": "Potato",
+            "quantity": 10.0,
+            "unit": "kg"
+          }
       ]
     },
     {
@@ -211,5 +214,7 @@
         }
       ]
     }
+  ]
+}
   ]
 }
