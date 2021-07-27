@@ -5,10 +5,19 @@ import connect from "./db.js";
 
 const app = express(); // instanciranje aplikacije
 const port = 3000; // port na kojem će web server slušati
-
 app.use(cors());
 app.use(express.json());
 
+// app.get("/posts", async (req, res) => {
+//   let db = await connect();
+
+//   let cursor = await db.collection("fridge").find().sort({ category });
+//   let restults = await cursor.toArray();
+
+//   res.json();
+// });
+
+/* OVO JE OD PRIJE: */
 //home
 app.get("/", (req, res) => res.json(data.weekly_plan));
 app.get("/:username", (req, res) => {
