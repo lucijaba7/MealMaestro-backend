@@ -4,7 +4,7 @@ import cors from "cors";
 import connect from "./db.js";
 
 const app = express(); // instanciranje aplikacije
-const port = 3000; // port na kojem će web server slušati
+const port = 4000; // port na kojem će web server slušati
 app.use(cors());
 app.use(express.json());
 
@@ -37,6 +37,14 @@ app.get("/:username/daily_meal", (req, res) => {
 
 //recipes
 app.get("/recipes", (req, res) => res.json(data.recipes));
+
+// moje za uhvatiti FK nekako nezzz
+app.get("/ingredients", async (req, res) => {
+  let db = await connect();
+  let cursor = await db.collection("ingredients").find();
+  let results = await cursor.toArray();
+  res.json(results);
+});
 //
 
 app.listen(port, () => console.log(`Slušam na portu ${port}!`));
