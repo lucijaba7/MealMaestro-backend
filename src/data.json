@@ -41,6 +41,48 @@
           "username": "masna_kopriva"
         }
       ]
+    },
+    {
+      "id": "1wrhweiwh37093",
+      "name": "Chicken",
+      "image": "fadgsfw",
+      "meal_type": "Lunch",
+      "servings": 3,
+      "total_time": 20,
+      "username": "kuharica",
+      "ingredients_list": [
+        {
+          "ingredient_name": "Chicken breast",
+          "quantity": 2,
+          "unit": "kg"
+        }
+      ],
+      "directions": "Just Cook!",
+      "tags": ["low-fat", "vegeterian"],
+      "date": "16-08-2021",
+      "published": false,
+      "ratings": []
+    },
+    {
+      "id": "1wrhweiwh37093",
+      "name": "Soup",
+      "image": "fadgsfw",
+      "meal_type": "Lunch",
+      "servings": 3,
+      "total_time": 20,
+      "username": "masterchef",
+      "ingredients_list": [
+        {
+          "ingredient_name": "Chicken breast",
+          "quantity": 2,
+          "unit": "kg"
+        }
+      ],
+      "directions": "Maaa nezz",
+      "tags": ["low-fat", "vegeterian"],
+      "date": "16-08-2021",
+      "published": false,
+      "ratings": []
     }
   ],
   "user": [
@@ -107,7 +149,7 @@
   "weekly_plan": [
     {
       "username": "kuharica",
-      "start_day": "16-07-2021",
+      "start_day": "2021-07-26",
       "confirm": false,
       "daily_meal": [
         {
@@ -165,6 +207,33 @@
             }
           ]
         }
+      ]
+    },
+    {
+      "username": "kuharica",
+      "start_day": "2021-08-01",
+      "confirm": false,
+      "daily_meal": [
+        {
+          "day": "Monday",
+          "meals": [
+            {
+              "recipe_id": "1wrhweiwh37093",
+              "cooked": true,
+              "servings": 4
+            },
+            {
+              "recipe_id": "siefiehfn73k",
+              "cooked": true,
+              "servings": 4
+            },
+            {
+              "recipe_id": "SKFKkfnes7626",
+              "cooked": false,
+              "servings": 4
+            }
+          ]
+        }
       ],
       "shopping_list": {
         "finished": false,
@@ -187,34 +256,34 @@
   ],
   "fridge": [
     {
-    "username": "kuharica",
-    "fridge_items":  [  
-      {
-        "category": "Vegetables",
-        "ingredients": [
-          {
-            "name": "Tomato",
-            "quantity": 5.0,
-            "unit": "kg"
-          },
-          {
-            "name": "Potato",
-            "quantity": 10.0,
-            "unit": "kg"
-          }
-      ]
-    },
-    {
-      "category": "Spices and Herbs",
-      "ingredients": [
+      "username": "kuharica",
+      "fridge_items": [
         {
-          "name": "Cumin",
-          "quantity": 0.25,
-          "unit": "kg"
+          "category": "Vegetables",
+          "ingredients": [
+            {
+              "name": "Tomato",
+              "quantity": 5.0,
+              "unit": "kg"
+            },
+            {
+              "name": "Potato",
+              "quantity": 10.0,
+              "unit": "kg"
+            }
+          ]
+        },
+        {
+          "category": "Spices and Herbs",
+          "ingredients": [
+            {
+              "name": "Cumin",
+              "quantity": 0.25,
+              "unit": "kg"
+            }
+          ]
         }
       ]
     }
-  ]
-}
   ]
 }
