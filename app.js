@@ -5,8 +5,9 @@ import cors from "cors";
 //import auth from "./auth";
 
 const mongoose = require("mongoose");
-const Avatar = require("./models/Avatar");
+const avatar = require("./models/avatar");
 const Ingredient = require("./models/ingredient");
+const Recipe = require("./models/recipe");
 
 const app = express(); // instanciranje aplikacije
 const port = 4000; // port na kojem će web server slušati
@@ -188,6 +189,14 @@ app.get("/recipes/:category", (req, res) => {
 // GET SAVED RECIPES
 
 // POST A RECIPE
+
+app.post("/recipes", (req, res) => {
+  let doc = req.body;
+  console.log(doc.image);
+  // data.recipes.push(doc)
+  // console.log(data.recipes)
+  res.json({ status: "ok" });
+});
 
 // ---- PROFILE ----
 

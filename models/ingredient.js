@@ -23,7 +23,6 @@ const ingredientSchema = new Schema({
     required: false,
   },
 });
-// timestamps jako kuul za created i last updated
 
 const Ingredient = mongoose.model("ingredient", ingredientSchema);
 
