@@ -5,7 +5,8 @@ import cors from "cors";
 //import auth from "./auth";
 
 const mongoose = require("mongoose");
-const avatar = require("./models/avatar");
+const multer = require("multer");
+const Avatar = require("./models/avatar");
 const Ingredient = require("./models/ingredient");
 const Recipe = require("./models/recipe");
 
@@ -23,35 +24,6 @@ mongoose
     app.listen(port, () => console.log(`Slušam na portu ${port}!`))
   ) //console.log("connected to db"))
   .catch((err) => console.log(err));
-
-//-----------------------------------------------------------
-const fs = require("fs");
-app.post("/images", (req, res) => {
-  var imgPath = `D:/Projects/avatars/avatar19.png`;
-
-  var imgData = fs.readFileSync(imgPath);
-
-  const image = new Avatar({
-    _id: new mongoose.Types.ObjectId(),
-    name: "avatar19",
-    data: imgData,
-    contentType: "image/png",
-  });
-
-  image
-    .save()
-    .then((result) => {
-      console.log(result);
-      res.status(201).json({
-        message: "Avatar created successfully",
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
-    });
-});
-//-----------------------------------------------------------
 
 // Babic
 // app.get("/posts", async (req, res) => {
@@ -190,9 +162,10 @@ app.get("/recipes/:category", (req, res) => {
 
 // POST A RECIPE
 
-app.post("/recipes", (req, res) => {
-  let doc = req.body;
-  console.log(doc.image);
+app.post("/recipes", multer().array("image"), (req, res) => {
+  console.log("body: ", req.body); // tu su druge info o receptu
+  console.log("image:", req.files); // tu je slika
+
   // data.recipes.push(doc)
   // console.log(data.recipes)
   res.json({ status: "ok" });
