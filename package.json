@@ -1,5 +1,5 @@
 {
-  "name": "backend-template",
+  "name": "mealmaestro-backend",
   "version": "1.0.0",
   "description": "Meal Maestro",
   "main": "app.js",

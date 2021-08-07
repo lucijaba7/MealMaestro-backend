@@ -6,6 +6,7 @@ import cors from "cors";
 
 const mongoose = require("mongoose");
 const Avatar = require("./models/Avatar");
+const Ingredient = require("./models/ingredient");
 
 const app = express(); // instanciranje aplikacije
 const port = 4000; // port na kojem će web server slušati
@@ -83,6 +84,20 @@ app.post("/users", async (req, res) => {
 // Postman: GET http://localhost:4000/plan/daily?username=kuharica&startDay=2021-07-26&weekDay=Tuesday
 
 // dohvati weekly plan koji ima taj username i start day pa dohvati recepte za weekDay
+
+app.get("/ingredients", (req, res) => {
+  Ingredient.find()
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => console.log(err));
+
+  // let db = await connect(); // pristup db objektu
+  // let cursor = await db.collection("ingredients").find();
+  // let results = await cursor.toArray();
+
+  // res.json(results);
+});
 
 app.get("/plan/daily", (req, res) => {
   let username = req.query.username;
