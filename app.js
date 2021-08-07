@@ -1,12 +1,55 @@
 import express from "express";
 import data from "./data.json";
 import cors from "cors";
-import connect from "./db.js";
+//import connect from "./db";
+//import auth from "./auth";
+
+const mongoose = require("mongoose");
+const Avatar = require("./models/Avatar");
 
 const app = express(); // instanciranje aplikacije
 const port = 4000; // port na kojem će web server slušati
 app.use(cors());
 app.use(express.json());
+
+let mongoURI =
+  "mongodb+srv://lucijaba7:2CfHrh1ToLuQiJFC@cluster0.dove2.mongodb.net/MealMaestro?retryWrites=true&w=majority";
+
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) =>
+    app.listen(port, () => console.log(`Slušam na portu ${port}!`))
+  ) //console.log("connected to db"))
+  .catch((err) => console.log(err));
+
+//-----------------------------------------------------------
+const fs = require("fs");
+app.post("/images", (req, res) => {
+  var imgPath = `D:/Projects/avatars/avatar19.png`;
+
+  var imgData = fs.readFileSync(imgPath);
+
+  const image = new Avatar({
+    _id: new mongoose.Types.ObjectId(),
+    name: "avatar19",
+    data: imgData,
+    contentType: "image/png",
+  });
+
+  image
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.status(201).json({
+        message: "Avatar created successfully",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+});
+//-----------------------------------------------------------
 
 // Babic
 // app.get("/posts", async (req, res) => {
@@ -17,6 +60,22 @@ app.use(express.json());
 
 //   res.json();
 // });
+
+// Postman: http://localhost:4000/users
+
+app.post("/users", async (req, res) => {
+  let user = req.body;
+  let id;
+
+  try {
+    id = await auth.registerUser(user);
+    res.status(201).json({ user });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+
+  // res.json({ id: id });
+});
 
 // ---- PLAN ----
 
@@ -191,4 +250,4 @@ app.get("/account/:username", (req, res) => {
 
 */
 
-app.listen(port, () => console.log(`Slušam na portu ${port}!`));
+//app.listen(port, () => console.log(`Slušam na portu ${port}!`));
