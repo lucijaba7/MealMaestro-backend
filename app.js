@@ -1,12 +1,26 @@
 import express from "express";
 import data from "./data.json";
 import cors from "cors";
-import connect from "./db.js";
+const Ingredient = require("./models/ingredient");
+const mongoose = require("mongoose");
 
 const app = express(); // instanciranje aplikacije
 const port = 4000; // port na kojem će web server slušati
 app.use(cors());
 app.use(express.json());
+
+const connection_string =
+  "mongodb+srv://lucijaba7:2CfHrh1ToLuQiJFC@cluster0.dove2.mongodb.net/MealMaestro?retryWrites=true&w=majority";
+
+mongoose
+  .connect(connection_string, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((result) =>
+    app.listen(port, () => console.log(`Slušam na portu ${port}!`))
+  ) // on je tu dodao app.listen?? kao da slusa samo tad nez
+  .catch((err) => console.log(err));
 
 // Babic
 // app.get("/posts", async (req, res) => {
@@ -24,6 +38,20 @@ app.use(express.json());
 // Postman: GET http://localhost:4000/plan/daily?username=kuharica&startDay=2021-07-26&weekDay=Tuesday
 
 // dohvati weekly plan koji ima taj username i start day pa dohvati recepte za weekDay
+
+app.get("/ingredients", (req, res) => {
+  Ingredient.find()
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => console.log(err));
+
+  // let db = await connect(); // pristup db objektu
+  // let cursor = await db.collection("ingredients").find();
+  // let results = await cursor.toArray();
+
+  // res.json(results);
+});
 
 app.get("/plan/daily", (req, res) => {
   let username = req.query.username;
@@ -190,5 +218,3 @@ app.get("/account/:username", (req, res) => {
 
 
 */
-
-app.listen(port, () => console.log(`Slušam na portu ${port}!`));
