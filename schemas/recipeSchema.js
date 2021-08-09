@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+//const Ingredient = require("./ingredientSchema");
 
-const recipeSchema = new Schema({
+const recipeSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -26,10 +26,22 @@ const recipeSchema = new Schema({
     type: String,
     required: true,
   },
-  ingredients_list: {
-    type: Array,
-    required: true,
-  },
+  ingredients_list: [
+    {
+      ingredient: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Ingredient",
+      },
+      unit: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
   directions: {
     type: String,
     required: true,
@@ -44,6 +56,14 @@ const recipeSchema = new Schema({
   },
 });
 
-const Recipe = mongoose.model("recipe", recipeSchema);
+recipeSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "ingredients_list.ingredient",
+    select: "ingredient_name",
+  });
+  next();
+});
+
+const Recipe = mongoose.model("Recipe", recipeSchema);
 
 module.exports = Recipe;

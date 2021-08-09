@@ -1,6 +1,7 @@
 const express = require("express");
 const Recipe = require("../schemas/recipeSchema");
 const multer = require("multer");
+const upload = require("../middleware/imageUploadMiddleware");
 
 const router = express.Router();
 
@@ -26,12 +27,28 @@ const router = express.Router();
 // });
 
 router.route("/").post(multer().array("image"), (req, res) => {
-  console.log("body: ", req.body); // tu su druge info o receptu
-  console.log("image:", req.files); // tu je slika
+  let url = upload(req.files[0]);
+  console.log(url);
+
+  // naci id z svaki ingr
+
+  // napravi objekt
+
+  //   console.log("body: ", req.body); // tu su druge info o receptu
+  //   console.log("image:", req.files[0]); // tu je slika
 
   // data.recipes.push(doc)
   // console.log(data.recipes)
+
   res.json({ status: "ok" });
+});
+
+router.route("/").get((req, res, next) => {
+  Recipe.find()
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => console.log(err));
 });
 
 module.exports = router;

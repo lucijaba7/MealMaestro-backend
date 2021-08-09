@@ -3,14 +3,6 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
-  //   first_name: {
-  //     type: String,
-  //     required: [true, "First name is required"],
-  //   },
-  //   last_name: {
-  //     type: String,
-  //     required: [true, "Last name is required"],
-  //   },
   username: {
     type: String,
     unique: true,
@@ -78,9 +70,9 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// userSchema.methods.isPasswordCorrect = async function (input, hash) {
-//   return await bcrypt.compare(input, hash);
-// };
+userSchema.methods.isPasswordCorrect = async function (input, hash) {
+  return await bcrypt.compare(input, hash);
+};
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

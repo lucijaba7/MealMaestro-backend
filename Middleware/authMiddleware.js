@@ -1,4 +1,5 @@
 import asyncHandler from "../utils/asyncHandler";
+import ErrorHandler from "../utils/errorHandler";
 import User from "../schemas/userSchema";
 import jwt from "jsonwebtoken";
 
@@ -15,17 +16,19 @@ exports.signup = asyncHandler(async (req, res, next) => {
   createToken(user, 201, res);
 });
 
-// exports.login = asyncHandler(async (req, res, next) => {
-//   const { email, password } = req.body;
-//   if (!email || !password) {
-//     return next(new ErrorHandler("Email and password are required", 400));
-//   }
-//   const user = await User.findOne({ email }).select("+password");
-//   if (!user || !(await user.isCorrectPassword(password, user.password))) {
-//     return next(new ErrorHandler("Email or password are incorrect", 401));
-//   }
-//   tokenCreation(user, 200, res);
-// });
+exports.login = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return next(new ErrorHandler("Email and password are required", 400));
+  }
+  const user = await User.findOne({
+    $or: [{ email }, { username: email }],
+  }).select("+password");
+  if (!user || !(await user.isPasswordCorrect(password, user.password))) {
+    return next(new ErrorHandler("Email or password are incorrect", 401));
+  }
+  createToken(user, 200, res);
+});
 
 //// TOKENI ----------------------------------
 const signToken = (id) => {
