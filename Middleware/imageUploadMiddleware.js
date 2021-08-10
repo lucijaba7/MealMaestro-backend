@@ -5,31 +5,21 @@ const streamifier = require("streamifier");
 // console.log(cloudinary.config().cloud_name);
 
 function upload(file) {
-  let cld_upload_stream = cloudinary.uploader.upload_stream(
-    {
-      folder: "recipes",
-    },
-    function (error, result) {
-      console.log(error, result);
-      if (result) {
-        return result.url;
+  return new Promise((resolve, reject) => {
+    let cld_upload_stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "recipes",
+      },
+      (error, result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
       }
-    }
-  );
-
-  streamifier.createReadStream(file.buffer).pipe(cld_upload_stream);
-
-  // cloudinary.uploader
-  //   .upload_stream(file.upload.path, "recipes", {
-  //     resource_type: "image",
-  //   })
-  //   .then((result) => {
-  //     console.log(result);
-  //     console.log("succes");
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
+    );
+    streamifier.createReadStream(file.buffer).pipe(cld_upload_stream);
+  });
 }
 
 module.exports = upload;

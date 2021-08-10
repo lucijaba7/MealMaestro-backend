@@ -1,5 +1,6 @@
 const express = require("express");
 const Recipe = require("../schemas/recipeSchema");
+const Ingredient = require("../schemas/ingredientSchema");
 const multer = require("multer");
 const upload = require("../middleware/imageUploadMiddleware");
 
@@ -26,22 +27,14 @@ const router = express.Router();
 //   res.json({ status: "ok" });
 // });
 
-router.route("/").post(multer().array("image"), (req, res) => {
-  let url = upload(req.files[0]);
-  console.log(url);
-
-  // naci id z svaki ingr
-
-  // napravi objekt
-
-  //   console.log("body: ", req.body); // tu su druge info o receptu
-  //   console.log("image:", req.files[0]); // tu je slika
-
-  // data.recipes.push(doc)
-  // console.log(data.recipes)
-
-  res.json({ status: "ok" });
-});
+router
+  .route("/getImageUrl")
+  .post(multer().array("image"), async (req, res, next) => {
+    // console.log(req.files);
+    let data = await upload(req.files[0]);
+    console.log(data.url);
+    res.json({ url: data.url });
+  });
 
 router.route("/").get((req, res, next) => {
   Recipe.find()
@@ -49,6 +42,40 @@ router.route("/").get((req, res, next) => {
       res.send(result);
     })
     .catch((err) => console.log(err));
+});
+
+router.route("/").post(async (req, res, next) => {
+  var ingredients_list = [];
+
+  for (var ingredient of req.body.ingredientsList) {
+    const ingredientData = await Ingredient.find({
+      ingredient_name: ingredient.ingredientName,
+    });
+
+    ingredients_list.push({
+      ingredient: ingredientData[0]._id,
+      unit: ingredient.unit,
+      quantity: ingredient.quantity,
+    });
+  }
+
+  var data = {
+    name: req.body.mealName,
+    image: req.body.image,
+    meal_type: req.body.mealType,
+    servings: req.body.servings,
+    total_time: req.body.totalTime,
+    username: req.body.username,
+    ingredients_list: ingredients_list,
+    directions: req.body.directions,
+    tags: req.body.tags,
+    date_created: req.body.date,
+  };
+
+  console.log(data);
+
+  const recipe = await Recipe.create(data);
+  res.json({ recipe });
 });
 
 module.exports = router;
