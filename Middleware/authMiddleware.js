@@ -1,9 +1,14 @@
 import asyncHandler from "../utils/asyncHandler";
 import ErrorHandler from "../utils/errorHandler";
 import User from "../schemas/userSchema";
+import Avatar from "../schemas/avatarSchema";
 import jwt from "jsonwebtoken";
 
 exports.signup = asyncHandler(async (req, res, next) => {
+  let avatar = await Avatar.find({
+    url: req.body.avatar,
+  });
+
   const user = await User.create({
     username: req.body.username,
     email: req.body.email,
@@ -11,7 +16,7 @@ exports.signup = asyncHandler(async (req, res, next) => {
     password_confirm: req.body.password_confirm,
     preferences: req.body.preferences,
     servings: req.body.servings,
-    avatar: req.body.avatar,
+    avatar: avatar[0],
   });
   createToken(user, 201, res);
 });

@@ -1,6 +1,7 @@
 import express from "express";
 import data from "./data.json";
 import cors from "cors";
+import avatarRouter from "./routes/avatarRouter";
 import ingredientRouter from "./routes/ingredientRouter";
 import userRouter from "./routes/userRouter";
 import recipeRouter from "./routes/recipeRouter";
@@ -10,6 +11,7 @@ const app = express(); // instanciranje aplikacije
 app.use(cors());
 app.use(express.json());
 
+app.use("/avatars", avatarRouter);
 app.use("/ingredients", ingredientRouter);
 app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);

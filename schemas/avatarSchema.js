@@ -1,17 +1,12 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const avatarSchema = new Schema({
+const avatarSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   name: {
     type: String,
     required: true,
   },
-  data: {
-    type: Buffer,
-    required: true,
-  },
-  contentType: {
+  url: {
     type: String,
     required: true,
   },
