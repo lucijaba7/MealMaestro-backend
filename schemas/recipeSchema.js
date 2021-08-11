@@ -53,6 +53,22 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ratings: [
+    {
+      rate: {
+        type: Number,
+        required: true,
+      },
+      date: {
+        type: Date,
+        required: true,
+      },
+      user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User",
+      },
+    },
+  ],
 });
 
 recipeSchema.pre(/^find/, function (next) {
