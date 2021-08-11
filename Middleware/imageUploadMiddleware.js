@@ -1,8 +1,5 @@
-// const dotenv = require("dotenv");
-// dotenv.config({ path: "./config.env" });
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
-// console.log(cloudinary.config().cloud_name);
 
 function upload(file) {
   return new Promise((resolve, reject) => {
