@@ -81,6 +81,14 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "avatar",
+    select: "url",
+  });
+  next();
+});
+
 // userSchema.pre(/^find/, function (next) {
 //   this.find({ active: { $ne: false } });
 //   next();
