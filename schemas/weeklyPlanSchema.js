@@ -25,17 +25,19 @@ const weeklyPlanSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      daily_plan: {
-        recipe: {
-          type: mongoose.Schema.ObjectId,
-          ref: "Recipe",
+      daily_plan: [
+        {
+          recipe: {
+            type: mongoose.Schema.ObjectId,
+            ref: "Recipe",
+          },
+          cooked: {
+            type: Boolean,
+            required: true,
+            default: false,
+          },
         },
-        cooked: {
-          type: Boolean,
-          required: true,
-          default: false,
-        },
-      },
+      ],
     },
   ],
   grocery_list: {
@@ -44,13 +46,13 @@ const weeklyPlanSchema = new mongoose.Schema({
   },
 });
 
-// recipeSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: "ingredients_list.ingredient",
-//     select: "ingredient_name",
-//   });
-//   next();
-// });
+weeklyPlanSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "user",
+    select: "_id",
+  });
+  next();
+});
 
 const WeeklyPlan = mongoose.model("WeeklyPlan", weeklyPlanSchema);
 

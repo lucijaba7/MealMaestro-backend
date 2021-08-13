@@ -94,13 +94,13 @@ userSchema.pre(/^find/, function (next) {
 //   next();
 // });
 
-// userSchema.methods.hasChangedPassword = function (JWTTS) {
-//   if (this.password_changed_at) {
-//     const changed_at = parseInt(this.password_changed_at.getTime() / 1000, 10);
-//     return JWTTS < changed_at;
-//   }
-//   return false;
-// };
+userSchema.methods.hasChangedPassword = function (JWTTimestamp) {
+  if (this.password_changed_at) {
+    const changed_at = parseInt(this.password_changed_at.getTime() / 1000, 10);
+    return JWTTimestamp < changed_at;
+  }
+  return false;
+};
 
 // userSchema.pre("save", function (next) {
 //   if (!this.isModified("password") || this.isNew) return next();
