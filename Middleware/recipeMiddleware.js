@@ -1,6 +1,4 @@
 const Recipe = require("../schemas/recipeSchema");
-const Ingredient = require("../schemas/ingredientSchema");
-const multer = require("multer");
 const upload = require("../middleware/imageUploadMiddleware");
 
 // app.get("/recipes/:category", (req, res) => {

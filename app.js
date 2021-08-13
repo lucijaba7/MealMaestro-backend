@@ -1,6 +1,9 @@
 import express from "express";
 import data from "./data.json";
 import cors from "cors";
+import ErrorHandler from "./utils/errorHandler";
+import errorMiddleware from "./middleware/errorMiddleware";
+import authMiddleware from "./middleware/authMiddleware";
 import avatarRouter from "./routes/avatarRouter";
 import ingredientRouter from "./routes/ingredientRouter";
 import userRouter from "./routes/userRouter";
@@ -9,12 +12,20 @@ import recipeRouter from "./routes/recipeRouter";
 const app = express(); // instanciranje aplikacije
 
 app.use(cors());
+app.options("*", cors());
 app.use(express.json());
 
 app.use("/avatars", avatarRouter);
-app.use("/ingredients", ingredientRouter);
 app.use("/users", userRouter);
-app.use("/recipes", recipeRouter);
+app.use(authMiddleware.protect); // protectamo sve osim logina i signupa
+app.use("/ingredients", ingredientRouter);
+
+app.all("*", (req, res, next) => {
+  next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+app.use(errorMiddleware);
+
+module.exports = app;
 
 // let mongoURI =
 //   "mongodb+srv://lucijaba7:2CfHrh1ToLuQiJFC@cluster0.dove2.mongodb.net/MealMaestro?retryWrites=true&w=majority";
@@ -183,13 +194,13 @@ app.use("/recipes", recipeRouter);
 // GET USER DATA
 // Postman GET http://localhost:4000/profile?username=kuharica
 
-app.get("/profile", (req, res) => {
-  let username = req.query.username;
+// app.get("/profile", (req, res) => {
+//   let username = req.query.username;
 
-  // ovo ce radit Mongo (treba dohvatit info o useru + njegove recepte)
-  let user = data.user.filter((x) => x.username == username);
-  res.json(user);
-});
+//   // ovo ce radit Mongo (treba dohvatit info o useru + njegove recepte)
+//   let user = data.user.filter((x) => x.username == username);
+//   res.json(user);
+// });
 
 // PROFILE SETTINGS
 // Postman GET http://localhost:4000/settings?username=kuharica
@@ -201,5 +212,3 @@ app.get("/profile", (req, res) => {
 //   let user = data.user.filter((x) => x.username == username);
 //   res.json(user[0].settings);
 // });
-
-module.exports = app;
