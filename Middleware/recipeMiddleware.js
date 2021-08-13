@@ -40,25 +40,6 @@ exports.getImageUrl = async (req, res, next) => {
   res.json({ url: data.url });
 };
 
-exports.getIngredients = async (req, res, next) => {
-  var ingredients_list = [];
-
-  for (var ingredient of req.body.ingredientsList) {
-    const ingredientData = await Ingredient.find({
-      ingredient_name: ingredient.ingredientName,
-    });
-
-    ingredients_list.push({
-      ingredient: ingredientData[0]._id,
-      unit: ingredient.unit,
-      quantity: ingredient.quantity,
-    });
-  }
-
-  req.ingredientsList = ingredients_list;
-  next();
-};
-
 exports.createRecipe = async (req, res, next) => {
   const userData = await User.findById(req.body.userId);
 

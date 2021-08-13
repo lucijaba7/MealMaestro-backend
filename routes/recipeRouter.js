@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const recipeMiddleware = require("../middleware/recipeMiddleware");
+const ingredientMiddleware = require("../middleware/ingredientMiddleware");
 
 const router = express.Router();
 
@@ -11,6 +12,9 @@ router
 router
   .route("/")
   .get(recipeMiddleware.getRecipes)
-  .post(recipeMiddleware.createRecipe);
+  .post(
+    ingredientMiddleware.getIngredientsIdFromName,
+    recipeMiddleware.createRecipe
+  );
 
 module.exports = router;
