@@ -3,7 +3,7 @@ import authMiddleware from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.post("/signup", authMiddleware.signup);
-router.post("/login", authMiddleware.login);
+router.route("/signup").post(authMiddleware.signup);
+router.route("/login").post(authMiddleware.login);
 
 module.exports = router;

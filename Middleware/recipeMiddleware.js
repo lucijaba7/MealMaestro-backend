@@ -1,5 +1,6 @@
 const Recipe = require("../schemas/recipeSchema");
 const Ingredient = require("../schemas/ingredientSchema");
+const User = require("../schemas/userSchema");
 const multer = require("multer");
 const upload = require("../middleware/imageUploadMiddleware");
 
@@ -59,21 +60,29 @@ exports.getIngredients = async (req, res, next) => {
 };
 
 exports.createRecipe = async (req, res, next) => {
+  const userData = await User.findById(req.body.userId);
+
   var data = {
     name: req.body.mealName,
     image: req.body.image,
     meal_type: req.body.mealType,
     servings: req.body.servings,
     total_time: req.body.totalTime,
-    username: req.body.username,
+    username: userData.username,
     ingredients_list: req.body.ingredientsList,
     directions: req.body.directions,
     tags: req.body.tags,
     date_created: req.body.date,
   };
 
-  console.log(data);
-
   const recipe = await Recipe.create(data);
+
+  // ovo se moze iscupati al nez u koj middleware bi islo
+
+  await User.updateOne(
+    { _id: req.body.userId },
+    { $push: { custom_recipes: recipe._id } }
+  );
+
   res.json({ recipe });
 };

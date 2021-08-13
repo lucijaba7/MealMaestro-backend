@@ -5,6 +5,7 @@ import avatarRouter from "./routes/avatarRouter";
 import ingredientRouter from "./routes/ingredientRouter";
 import userRouter from "./routes/userRouter";
 import recipeRouter from "./routes/recipeRouter";
+import weeklyPlanRouter from "./routes/weeklyPlanRouter";
 
 const app = express(); // instanciranje aplikacije
 
@@ -15,6 +16,7 @@ app.use("/avatars", avatarRouter);
 app.use("/ingredients", ingredientRouter);
 app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
+app.use("/weeklyPlan", weeklyPlanRouter);
 
 // let mongoURI =
 //   "mongodb+srv://lucijaba7:2CfHrh1ToLuQiJFC@cluster0.dove2.mongodb.net/MealMaestro?retryWrites=true&w=majority";
@@ -183,13 +185,13 @@ app.use("/recipes", recipeRouter);
 // GET USER DATA
 // Postman GET http://localhost:4000/profile?username=kuharica
 
-app.get("/profile", (req, res) => {
-  let username = req.query.username;
+// app.get("/profile", (req, res) => {
+//   let username = req.query.username;
 
-  // ovo ce radit Mongo (treba dohvatit info o useru + njegove recepte)
-  let user = data.user.filter((x) => x.username == username);
-  res.json(user);
-});
+//   // ovo ce radit Mongo (treba dohvatit info o useru + njegove recepte)
+//   let user = data.user.filter((x) => x.username == username);
+//   res.json(user);
+// });
 
 // PROFILE SETTINGS
 // Postman GET http://localhost:4000/settings?username=kuharica
