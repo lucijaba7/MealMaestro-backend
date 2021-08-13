@@ -40,10 +40,17 @@ exports.createWeeklyPlan = async (req, res, next) => {
   for (var meal of ["Breakfast", "Lunch", "Snack", "Dinner", "Dessert"]) {
     var saved_recipes = [];
 
-    var meals = await Recipe.find({
-      meal_type: meal,
-      tags: { $all: preferences },
-    });
+    // FUS nacin
+    if (preferences.length) {
+      var meals = await Recipe.find({
+        meal_type: meal,
+        tags: { $all: ["vegan"] },
+      });
+    } else {
+      var meals = await Recipe.find({
+        meal_type: meal,
+      });
+    }
 
     for (var index in days) {
       var chosen_recipe;

@@ -17,11 +17,13 @@ app.options("*", cors());
 app.use(express.json());
 
 app.use("/avatars", avatarRouter);
+app.use("/ingredients", ingredientRouter);
+
+// app.use(authMiddleware.protect); // protectamo sve osim logina i signupa
+
 app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
 app.use("/weeklyPlan", weeklyPlanRouter);
-app.use(authMiddleware.protect); // protectamo sve osim logina i signupa
-app.use("/ingredients", ingredientRouter);
 
 app.all("*", (req, res, next) => {
   next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));
