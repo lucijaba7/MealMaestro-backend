@@ -58,3 +58,31 @@ exports.createRecipe = async (req, res, next) => {
   const recipe = await Recipe.create(data);
   res.json({ recipe });
 };
+
+// exports.getRecipeId = async (req, res, next) => {
+//   const recipe = await Recipe.findById(req.params.id);
+
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       recipe
+//     }
+//   })
+// };
+
+// Recipe.findById(id, function (err, docs) {
+//   if (err){
+//       console.log(err);
+//   }
+//   else{
+//       console.log("Result : ", docs);
+//   }
+// });
+
+exports.getRecipeById = async (req, res, next) => {
+  // res.send(req.params.id)
+  const recipe = await Recipe.findById(req.params.id)
+  res.json({recipe})  
+}
+
+
