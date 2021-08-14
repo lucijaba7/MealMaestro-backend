@@ -48,8 +48,7 @@ const weeklyPlanSchema = new mongoose.Schema({
 
 weeklyPlanSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "user",
-    select: "_id",
+    path: "daily_meals.daily_plan.recipe",
   });
   next();
 });
