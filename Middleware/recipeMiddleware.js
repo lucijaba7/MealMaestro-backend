@@ -93,3 +93,15 @@ exports.getRecipeById = async (req, res, next) => {
   const recipe = await Recipe.findById(req.params.id);
   res.json({ recipe });
 };
+
+exports.getCustomRecipes = async (req, res, next) => {
+  const userData = await User.findById(req.params.id);
+  const customRecipes = [];
+
+  for (let recipeId of userData.custom_recipes) {
+    const recipe = await Recipe.findById(recipeId);
+    customRecipes.push(recipe);
+  }
+
+  res.json(customRecipes);
+};
