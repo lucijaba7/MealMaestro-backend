@@ -90,8 +90,6 @@ exports.createRecipe = async (req, res, next) => {
 
 exports.getRecipeById = async (req, res, next) => {
   // res.send(req.params.id)
-  const recipe = await Recipe.findById(req.params.id)
-  res.json({recipe})  
-}
-
-
+  const recipe = await Recipe.findById(req.params.id);
+  res.json({ recipe });
+};
