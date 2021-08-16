@@ -36,6 +36,9 @@ const userSchema = new mongoose.Schema({
     ref: "Avatar",
     required: true,
   },
+  about_you: {
+    type: String,
+  },
   password_changed_at: Date,
   active: {
     type: Boolean,
