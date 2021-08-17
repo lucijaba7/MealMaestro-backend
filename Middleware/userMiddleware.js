@@ -1,19 +1,8 @@
 import asyncHandler from "../utils/asyncHandler";
 import ErrorHandler from "../utils/errorHandler";
 import User from "../schemas/userSchema";
-const Recipe = require("../schemas/recipeSchema");
-
-// exports.getAllUsers = asyncHandler(async (req, res, next) => {
-//   const users = await User.find();
-
-//   res.status(200).json({
-//     status: "success",
-//     results: users.length,
-//     data: {
-//       users,
-//     },
-//   });
-// });
+import Avatar from "../schemas/avatarSchema";
+import Recipe from "../schemas/recipeSchema";
 
 exports.getCustomRecipes = async (req, res, next) => {
   const userData = await User.findById(req.params.id);
@@ -35,6 +24,14 @@ exports.updateMyData = asyncHandler(async (req, res, next) => {
 
   // 2) Filter out unwanted fields that aren't allowed to be updated
   const filteredReqBody = filterObj(req.body, "about_you", "username", "email");
+  if (req.body.avatar_url) {
+    const avatarUrl = await Avatar.findOne(
+      { url: req.body.avatar_url },
+      { _id: 1 }
+    );
+
+    filteredReqBody.avatar = avatarUrl._id;
+  }
 
   // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(
