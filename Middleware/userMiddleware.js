@@ -17,6 +17,7 @@ exports.getCustomRecipes = async (req, res, next) => {
 };
 
 exports.updateMyData = asyncHandler(async (req, res, next) => {
+  console.log(req);
   // 1) Create error if user posts password data
   if (req.body.newPassword || req.body.confirmPassword) {
     return next(new ErrorHandler("Action not allowed"), 400);
