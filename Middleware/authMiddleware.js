@@ -52,18 +52,18 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
 
   // 2) Validate token (Verification)
-  const decoded_payload = await promisify(
-    jwt.verify(token, process.env.JWT_SECRET)
+  const decoded_payload = await promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET
   ); //promisify returns a promise (verify is async.)
-
   // 3) Check if user still exists
-  const currentUser = await User.findById(decoded.id);
+  const currentUser = await User.findById(decoded_payload.id);
 
   if (!currentUser) {
     return next(new ErrorHandler("User with this token no longer exists", 401));
   }
   // 4) Check i f user changed password after token was issued
-  if (currentUser.hasChangedPassword(decoded.iat)) {
+  if (currentUser.hasChangedPassword(decoded_payload.iat)) {
     //iat = timestamp
     return next(new ErrorHandler("Password changed, log in again.", 401));
   }
@@ -71,6 +71,26 @@ exports.protect = asyncHandler(async (req, res, next) => {
   // Grant access to protected route
   req.user = currentUser;
   next();
+});
+
+exports.changePassword = asyncHandler(async (req, res, next) => {
+  // 1) Get user from collection
+  const user = await User.findById(req.user._id).select("+password");
+
+  // 2) Check if POSTed current password is correct
+  if (
+    !(await user.isPasswordCorrect(req.body.currentPassword, user.password))
+  ) {
+    return next(new ErrorHandler("Wrong current password", 401));
+  }
+
+  // 3) If so, update password
+  user.password = req.body.newPassword;
+  user.password_confirm = req.body.confirmPassword;
+  await user.save();
+
+  // 4) Log user in, send JWT
+  createToken(user, 200, res);
 });
 
 //// TOKENI ----------------------------------
