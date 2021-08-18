@@ -16,13 +16,33 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
 });
 
 exports.getCustomRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.params.id)
-  const customRecipes = [];
+  const userData = await User.findById(req.params.id);
 
-  for(let recipeId of userData.custom_recipes ){
-    const recipe = await Recipe.findById(recipeId)
-    customRecipes.push(recipe)    
-  }
-  
-  res.json(customRecipes)
-}
+  const customRecipes = await Promise.all(
+    userData.custom_recipes.map(async (recipe) => {
+      return await Recipe.findById(recipe);
+    })
+  );
+
+  if (req.query.mealType)
+    res.send(
+      customRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
+    );
+  else res.send(customRecipes);
+};
+
+exports.getSavedRecipes = async (req, res, next) => {
+  const userData = await User.findById(req.params.id);
+
+  const savedRecipes = await Promise.all(
+    userData.saved_recipes.map(async (recipe) => {
+      return await Recipe.findById(recipe);
+    })
+  );
+
+  if (req.query.mealType)
+    res.send(
+      savedRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
+    );
+  else res.send(savedRecipes);
+};

@@ -4,9 +4,11 @@ import userMiddleware from "../middleware/userMiddleware";
 
 const router = express.Router();
 
-router.post("/signup", authMiddleware.signup);
-router.post("/login", authMiddleware.login);
-router.get("/info", userMiddleware.getAllUsers);
-router.route("/:id/customRecipes").get
+router.route("/signup").post(authMiddleware.signup);
+router.route("/login").post(authMiddleware.login);
+router.route("/info").get(userMiddleware.getAllUsers);
+
+router.route("/:id/customRecipes").get(userMiddleware.getCustomRecipes);
+router.route("/:id/savedRecipes").get(userMiddleware.getSavedRecipes);
 
 module.exports = router;

@@ -9,6 +9,7 @@ import ingredientRouter from "./routes/ingredientRouter";
 import userRouter from "./routes/userRouter";
 import recipeRouter from "./routes/recipeRouter";
 import weeklyPlanRouter from "./routes/weeklyPlanRouter";
+import dailyPlanRouter from "./routes/dailyPlanRouter";
 
 const app = express(); // instanciranje aplikacije
 
@@ -24,6 +25,7 @@ app.use("/ingredients", ingredientRouter);
 app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
 app.use("/weeklyPlan", weeklyPlanRouter);
+app.use("/dailyPlan", dailyPlanRouter);
 
 app.all("*", (req, res, next) => {
   next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));

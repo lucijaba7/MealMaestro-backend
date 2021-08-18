@@ -26,11 +26,20 @@ const upload = require("../middleware/imageUploadMiddleware");
 // });
 
 exports.getRecipes = (req, res, next) => {
-  Recipe.find()
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => console.log(err));
+  if (req.query.mealType)
+    Recipe.find({ meal_type: req.query.mealType })
+      .limit(10)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => console.log(err));
+  else
+    Recipe.find()
+      .limit(10)
+      .then((result) => {
+        res.send(result);
+      })
+      .catch((err) => console.log(err));
 };
 
 exports.getImageUrl = async (req, res, next) => {
