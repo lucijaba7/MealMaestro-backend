@@ -4,28 +4,39 @@ import User from "../schemas/userSchema";
 import Avatar from "../schemas/avatarSchema";
 import Recipe from "../schemas/recipeSchema";
 
-const filterObj = (obj, ...allowedFields) => {
-  const filtered = {};
-  Object.keys(obj).forEach((field) => {
-    if (allowedFields.includes(field)) filtered[field] = obj[field];
-  });
-  return filtered;
-};
+exports.getCustomRecipes = asyncHandler(async (req, res, next) => {
+  const userData = await User.findById(req.user._id);
 
-exports.getCustomRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.params.id);
-  const customRecipes = [];
+  const customRecipes = await Promise.all(
+    userData.custom_recipes.map(async (recipe) => {
+      return await Recipe.findById(recipe);
+    })
+  );
 
-  for (let recipeId of userData.custom_recipes) {
-    const recipe = await Recipe.findById(recipeId);
-    customRecipes.push(recipe);
-  }
+  if (req.query.mealType)
+    res.send(
+      customRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
+    );
+  else res.send(customRecipes);
+});
 
-  res.json(customRecipes);
-};
+exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
+  const userData = await User.findById(req.user._id);
+
+  const savedRecipes = await Promise.all(
+    userData.saved_recipes.map(async (recipe) => {
+      return await Recipe.findById(recipe);
+    })
+  );
+
+  if (req.query.mealType)
+    res.send(
+      savedRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
+    );
+  else res.send(savedRecipes);
+});
 
 exports.updateMyData = asyncHandler(async (req, res, next) => {
-  console.log(req);
   // 1) Create error if user posts password data
   if (req.body.newPassword || req.body.confirmPassword) {
     return next(new ErrorHandler("Action not allowed"), 400);
@@ -57,34 +68,10 @@ exports.updateMyData = asyncHandler(async (req, res, next) => {
   });
 });
 
-exports.getCustomRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.params.id);
-
-  const customRecipes = await Promise.all(
-    userData.custom_recipes.map(async (recipe) => {
-      return await Recipe.findById(recipe);
-    })
-  );
-
-  if (req.query.mealType)
-    res.send(
-      customRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
-    );
-  else res.send(customRecipes);
-};
-
-exports.getSavedRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.params.id);
-
-  const savedRecipes = await Promise.all(
-    userData.saved_recipes.map(async (recipe) => {
-      return await Recipe.findById(recipe);
-    })
-  );
-
-  if (req.query.mealType)
-    res.send(
-      savedRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
-    );
-  else res.send(savedRecipes);
+const filterObj = (obj, ...allowedFields) => {
+  const filtered = {};
+  Object.keys(obj).forEach((field) => {
+    if (allowedFields.includes(field)) filtered[field] = obj[field];
+  });
+  return filtered;
 };

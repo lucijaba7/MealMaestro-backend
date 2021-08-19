@@ -56,6 +56,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
     token,
     process.env.JWT_SECRET
   ); //promisify returns a promise (verify is async.)
+
   // 3) Check if user still exists
   const currentUser = await User.findById(decoded_payload.id);
 
