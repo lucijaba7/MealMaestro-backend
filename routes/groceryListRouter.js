@@ -1,11 +1,8 @@
-// app.get("/groceryList", (req, res) => {
-//   let username = req.query.username;
-//   let startDay = req.query.startDay;
+const express = require("express");
+const ingredientMiddleware = require("../middleware/ingredientMiddleware");
 
-//   // ovo ce radit Mongo
-//   let weeklyPlan = data.weekly_plan.filter(
-//     (x) => x.username == username && x.start_day == startDay
-//   );
+const router = express.Router();
 
-//   res.json(weeklyPlan[0].shopping_list);
-// });
+router.route("/").get(ingredientMiddleware.getGroceryList);
+
+module.exports = router;

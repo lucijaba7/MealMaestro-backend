@@ -1,4 +1,6 @@
+const GroceryList = require("../schemas/groceryListSchema");
 const Ingredient = require("../schemas/ingredientSchema");
+
 exports.getIngredientsIdFromName = async (req, res, next) => {
   var ingredients_list = [];
 
@@ -16,4 +18,10 @@ exports.getIngredientsIdFromName = async (req, res, next) => {
 
   req.body.ingredientsList = ingredients_list;
   next();
+};
+
+exports.getGroceryList = async (req, res, next) => {
+  const userId = req.query.userId;
+  const groceryList = await GroceryList.find({ user: userId, active: true });
+  res.json(groceryList);
 };

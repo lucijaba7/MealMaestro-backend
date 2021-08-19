@@ -2,6 +2,8 @@ const WeeklyPlan = require("../schemas/weeklyPlanSchema");
 const DailyPlan = require("../schemas/dailyPlanSchema");
 const User = require("../schemas/userSchema");
 const Recipe = require("../schemas/recipeSchema");
+const Ingredient = require("../schemas/ingredientSchema");
+const GroceryList = require("../schemas/groceryListSchema");
 
 const days = [
   "Monday",
@@ -78,12 +80,12 @@ exports.createWeeklyPlan = async (req, res, next) => {
   );
 
   const weeklyPlan = await WeeklyPlan.create({
-    user: user_id,
+    user: req.query.userId,
     start_day: new Date(req.query.startDay),
     daily_plans: daily_meals,
   });
 
-  res.json({ weeklyPlan });
+  res.json(weeklyPlan);
 };
 
 exports.deleteMeal = async (req, res, next) => {
@@ -102,4 +104,77 @@ exports.addMeal = async (req, res, next) => {
   );
 
   res.json({ plan: plan });
+};
+
+function findUnit(ingredient, unit) {
+  if (unit == "g") return 1;
+  if (unit == "kg") return 1000;
+  for (var key in ingredient) {
+    if (
+      ["pieceMeasurements", "liquidMeasurements", "cupMeasurements"].includes(
+        key
+      )
+    ) {
+      for (var measure of ingredient[key]) {
+        if (measure.unit == unit) return measure.g_weight;
+      }
+    }
+  }
+  return 1;
+}
+
+exports.confirmPlan = async (req, res, next) => {
+  await WeeklyPlan.findByIdAndUpdate(
+    { _id: req.params.id },
+    { $set: { confirmed: true } }
+  );
+  next();
+};
+
+exports.createGroceryList = async (req, res, next) => {
+  const weeklyPlan = await WeeklyPlan.findById(req.params.id);
+
+  /////////////////////////// TREBA VIDIT STA IMA U FRIDGEU
+
+  var list_items = [];
+  var ingredient_quantity = {};
+
+  for (var daily_plan of weeklyPlan.daily_plans) {
+    for (var meal of daily_plan.meals) {
+      for (var ingredient of meal.recipe.ingredients_list) {
+        const ingredient_id = ingredient.ingredient._id;
+        const g_weight = findUnit(ingredient.ingredient, ingredient.unit);
+        if (ingredient_quantity[ingredient_id]) {
+          const new_value =
+            ingredient_quantity[ingredient_id] + g_weight * ingredient.quantity;
+          ingredient_quantity[ingredient_id] = new_value;
+        } else
+          ingredient_quantity[ingredient_id] = g_weight * ingredient.quantity;
+      }
+    }
+  }
+  for (var key in ingredient_quantity) {
+    list_items.push({
+      ingredient: key,
+      quantity: Math.ceil(ingredient_quantity[key] / 10) * 10,
+    });
+  }
+
+  ///Stavi da su sve ostale grocery lists od usera ne aktivne
+  await GroceryList.updateMany(
+    { user: weeklyPlan.user._id },
+    { $set: { active: false } }
+  );
+
+  const groceryList = await GroceryList.create({
+    user: weeklyPlan.user._id,
+    list_items: list_items,
+  });
+
+  await WeeklyPlan.findByIdAndUpdate(
+    { _id: req.params.id },
+    { $set: { grocery_list: groceryList._id } }
+  );
+
+  res.json(groceryList);
 };

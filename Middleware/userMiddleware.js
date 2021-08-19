@@ -58,13 +58,15 @@ exports.updateMyData = asyncHandler(async (req, res, next) => {
 });
 
 exports.getCustomRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.params.id);
+  const userData = await User.findById(req.user._id);
 
   const customRecipes = await Promise.all(
     userData.custom_recipes.map(async (recipe) => {
       return await Recipe.findById(recipe);
     })
   );
+
+  console.log(req.query.mealType);
 
   if (req.query.mealType)
     res.send(
@@ -74,7 +76,7 @@ exports.getCustomRecipes = async (req, res, next) => {
 };
 
 exports.getSavedRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.params.id);
+  const userData = await User.findById(req.user._id);
 
   const savedRecipes = await Promise.all(
     userData.saved_recipes.map(async (recipe) => {

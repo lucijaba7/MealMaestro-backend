@@ -8,28 +8,40 @@ const groceryListSchema = new mongoose.Schema({
   },
   finished_shopping: {
     type: Boolean,
-    required: true,
+    default: false,
+  },
+  active: {
+    type: Boolean,
+    default: true,
   },
   list_items: [
     {
       bought: {
         type: Boolean,
-        required: true,
+        default: false,
       },
       ingredient: {
         type: mongoose.Schema.ObjectId,
         ref: "Ingredient",
       },
-      unit: {
-        type: String,
-        required: true,
-      },
+      // unit: {
+      //   type: String,
+      //   required: true,
+      // },
       quantity: {
         type: Number,
         required: true,
       },
     },
   ],
+});
+
+groceryListSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "list_items.ingredient",
+    select: "ingredient_name",
+  });
+  next();
 });
 
 const GroceryList = mongoose.model("GroceryList", groceryListSchema);

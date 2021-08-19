@@ -74,7 +74,6 @@ const recipeSchema = new mongoose.Schema({
 recipeSchema.pre(/^find/, function (next) {
   this.populate({
     path: "ingredients_list.ingredient",
-    select: "ingredient_name",
   });
   next();
 });

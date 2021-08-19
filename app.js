@@ -7,6 +7,7 @@ import ingredientRouter from "./routes/ingredientRouter";
 import userRouter from "./routes/userRouter";
 import recipeRouter from "./routes/recipeRouter";
 import weeklyPlanRouter from "./routes/weeklyPlanRouter";
+import groceryListRouter from "./routes/groceryListRouter";
 import dailyPlanRouter from "./routes/dailyPlanRouter";
 import sendEmail from "./utils/email";
 const cron = require("node-cron");
@@ -23,6 +24,7 @@ app.use("/users", userRouter);
 app.use("/recipes", recipeRouter);
 app.use("/weeklyPlan", weeklyPlanRouter);
 app.use("/dailyPlan", dailyPlanRouter);
+app.use("/groceryList", groceryListRouter);
 
 app.all("*", (req, res, next) => {
   next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));
