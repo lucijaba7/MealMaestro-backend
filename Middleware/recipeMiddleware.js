@@ -1,29 +1,6 @@
 const Recipe = require("../schemas/recipeSchema");
-const Ingredient = require("../schemas/ingredientSchema");
 const User = require("../schemas/userSchema");
-const multer = require("multer");
 const upload = require("../middleware/imageUploadMiddleware");
-
-// app.get("/recipes/:category", (req, res) => {
-//   let category = req.params.category;
-//   let username = req.query.username;
-
-//   // ovo ce radit Mongo
-//   let recipes = data.recipes.filter((x) => x.username == username);
-//   let fridge_items = fridge[0].fridge_items.filter(
-//     (x) => x.category == category
-//   );
-
-//   res.json(fridge_items);
-// });
-
-// app.post("/recipes", (req, res) => {
-//   let doc = req.body;
-//   console.log(doc.image);
-//   // data.recipes.push(doc)
-//   // console.log(data.recipes)
-//   res.json({ status: "ok" });
-// });
 
 exports.getRecipes = (req, res, next) => {
   if (req.query.mealType)
@@ -34,8 +11,7 @@ exports.getRecipes = (req, res, next) => {
       })
       .catch((err) => console.log(err));
   else
-    Recipe.find()
-      .limit(10)
+    Recipe.find() //.limit(10)
       .then((result) => {
         res.send(result);
       })
@@ -97,14 +73,7 @@ exports.createRecipe = async (req, res, next) => {
 //   }
 // });
 
-exports.getCustomRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.params.id);
-  const customRecipes = [];
-
-  for (let recipeId of userData.custom_recipes) {
-    const recipe = await Recipe.findById(recipeId);
-    customRecipes.push(recipe);
-  }
-
-  res.json(customRecipes);
+exports.getRecipeById = async (req, res, next) => {
+  const recipe = await Recipe.findById(req.params.id);
+  res.send(recipe);
 };
