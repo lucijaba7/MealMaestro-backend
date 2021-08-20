@@ -12,8 +12,16 @@ router
   .get(authMiddleware.protect, userMiddleware.getCustomRecipes);
 
 router
+  .route("/customRecipes/remove")
+  .patch(authMiddleware.protect, userMiddleware.removeFromCustomRecipes);
+
+router
   .route("/savedRecipes")
   .get(authMiddleware.protect, userMiddleware.getSavedRecipes);
+
+router
+  .route("/savedRecipes/remove")
+  .patch(authMiddleware.protect, userMiddleware.removeFromSavedRecipes);
 
 router
   .route("/updatePassword")

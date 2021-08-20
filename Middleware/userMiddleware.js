@@ -20,6 +20,18 @@ exports.getCustomRecipes = asyncHandler(async (req, res, next) => {
   else res.send(customRecipes);
 });
 
+exports.removeFromCustomRecipes = asyncHandler(async (req, res, next) => {
+  const customRecipes = await User.updateOne(
+    { _id: req.user._id },
+    { $pull: { custom_recipes: req.query.recipeId } }
+  );
+
+  //remove from recipes
+  const recipes = await Recipe.deleteOne({ _id: req.query.recipeId });
+
+  res.json("ok");
+});
+
 exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.user._id);
 
@@ -34,6 +46,15 @@ exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
       savedRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
     );
   else res.send(savedRecipes);
+});
+
+exports.removeFromSavedRecipes = asyncHandler(async (req, res, next) => {
+  const savedRecipes = await User.updateOne(
+    { _id: req.user._id },
+    { $pull: { saved_recipes: req.query.recipeId } }
+  );
+
+  res.json(savedRecipes);
 });
 
 exports.updateMyData = asyncHandler(async (req, res, next) => {
