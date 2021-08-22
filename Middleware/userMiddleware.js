@@ -3,6 +3,7 @@ import ErrorHandler from "../utils/errorHandler";
 import User from "../schemas/userSchema";
 import Avatar from "../schemas/avatarSchema";
 import Recipe from "../schemas/recipeSchema";
+var mongoose = require("mongoose");
 
 exports.getCustomRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.user._id);
@@ -26,10 +27,12 @@ exports.removeFromCustomRecipes = asyncHandler(async (req, res, next) => {
     { $pull: { custom_recipes: req.query.recipeId } }
   );
 
-  //remove from recipes
   const recipes = await Recipe.deleteOne({ _id: req.query.recipeId });
 
-  res.json("ok");
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
 });
 
 exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
@@ -48,13 +51,84 @@ exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
   else res.send(savedRecipes);
 });
 
+exports.saveRecipe = asyncHandler(async (req, res, next) => {
+  const savedRecipes = await User.updateOne(
+    { _id: req.user._id },
+    { $push: { saved_recipes: req.query.recipeId } }
+  );
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
 exports.removeFromSavedRecipes = asyncHandler(async (req, res, next) => {
   const savedRecipes = await User.updateOne(
     { _id: req.user._id },
     { $pull: { saved_recipes: req.query.recipeId } }
   );
 
-  res.json(savedRecipes);
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
+exports.followUser = asyncHandler(async (req, res, next) => {
+  const response = await User.updateOne(
+    { _id: req.user._id },
+    { $push: { following: req.query.userId } }
+  );
+
+  const updatedUser = await User.findById(req.user._id);
+
+  res.status(200).json({
+    status: "succes",
+    data: {
+      user: updatedUser,
+    },
+  });
+});
+
+exports.unfollowUser = asyncHandler(async (req, res, next) => {
+  const response = await User.updateOne(
+    { _id: req.user._id },
+    { $pull: { following: req.query.userId } }
+  );
+
+  const updatedUser = await User.findById(req.user._id);
+
+  res.status(200).json({
+    status: "succes",
+    data: {
+      user: updatedUser,
+    },
+  });
+});
+
+exports.getFollowersNumber = asyncHandler(async (req, res, next) => {
+  User.aggregate(
+    [
+      {
+        $project: { following: 1 },
+      } /* select the following field as something we want to "send" to the next command in the chain */,
+      {
+        $unwind: "$following",
+      } /* this converts arrays into unique documents for counting */,
+      {
+        $group: {
+          /* execute 'grouping' */
+          _id: "$following",
+          count: { $sum: 1 },
+        },
+      },
+    ],
+    function (err, followersNumber) {
+      console.log(followersNumber);
+      res.send(followersNumber);
+    }
+  );
 });
 
 exports.updateMyData = asyncHandler(async (req, res, next) => {
@@ -96,3 +170,20 @@ const filterObj = (obj, ...allowedFields) => {
   });
   return filtered;
 };
+
+exports.getUserData = asyncHandler(async (req, res, next) => {
+  const userData = await User.findOne({ username: req.params.username });
+  res.send(userData);
+});
+
+exports.getUserRecipes = asyncHandler(async (req, res, next) => {
+  const userData = await User.findOne({ username: req.params.username });
+
+  const userRecipes = await Promise.all(
+    userData.custom_recipes.map(async (recipe) => {
+      return await Recipe.findById(recipe);
+    })
+  );
+
+  res.send(userRecipes);
+});
