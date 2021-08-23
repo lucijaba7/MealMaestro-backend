@@ -12,8 +12,29 @@ router
   .get(authMiddleware.protect, userMiddleware.getCustomRecipes);
 
 router
+  .route("/customRecipes/remove")
+  .patch(authMiddleware.protect, userMiddleware.removeFromCustomRecipes);
+
+router
   .route("/savedRecipes")
-  .get(authMiddleware.protect, userMiddleware.getSavedRecipes);
+  .get(authMiddleware.protect, userMiddleware.getSavedRecipes)
+  .patch(authMiddleware.protect, userMiddleware.saveRecipe);
+
+router
+  .route("/savedRecipes/remove")
+  .patch(authMiddleware.protect, userMiddleware.removeFromSavedRecipes);
+
+router
+  .route("/followUser")
+  .patch(authMiddleware.protect, userMiddleware.followUser);
+
+router
+  .route("/unfollowUser")
+  .patch(authMiddleware.protect, userMiddleware.unfollowUser);
+
+router
+  .route("/getFollowersNumber")
+  .get(authMiddleware.protect, userMiddleware.getFollowersNumber);
 
 router
   .route("/updatePassword")
@@ -24,5 +45,13 @@ router.patch(
   authMiddleware.protect,
   userMiddleware.updateMyData
 );
+
+router
+  .route("/:username")
+  .get(authMiddleware.protect, userMiddleware.getUserData);
+
+router
+  .route("/:username/customRecipes")
+  .get(authMiddleware.protect, userMiddleware.getUserRecipes);
 
 module.exports = router;
