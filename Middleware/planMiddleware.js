@@ -91,7 +91,7 @@ exports.createWeeklyPlan = async (req, res, next) => {
 exports.deleteMeal = async (req, res, next) => {
   const plan = await DailyPlan.updateOne(
     { _id: req.params.id },
-    { $pull: { meals: { _id: req.query.mealPlanId } } }
+    { $pull: { meals: { _id: req.body.mealPlanId } } }
   );
 
   res.json({ plan: plan });
@@ -100,7 +100,7 @@ exports.deleteMeal = async (req, res, next) => {
 exports.addMeal = async (req, res, next) => {
   const plan = await DailyPlan.updateOne(
     { _id: req.params.id },
-    { $push: { meals: { recipe: req.query.recipeId } } }
+    { $push: { meals: { recipe: req.body.recipeId } } }
   );
 
   res.json({ plan: plan });
@@ -157,6 +157,7 @@ exports.createGroceryList = async (req, res, next) => {
     list_items.push({
       ingredient: key,
       quantity: Math.ceil(ingredient_quantity[key] / 10) * 10,
+      required_quantity: Math.ceil(ingredient_quantity[key]),
     });
   }
 
@@ -177,4 +178,32 @@ exports.createGroceryList = async (req, res, next) => {
   );
 
   res.json(groceryList);
+};
+
+exports.updatee = async (req, res, next) => {
+  const ingredients = await Ingredient.find();
+
+  var rijeci_koje_zavrsavaju_sa_s = [];
+  var rijecnik = {};
+
+  for (var ingr of ingredients) {
+    var l = ingr.ingredient_name.length;
+    if (ingr.ingredient_name[l - 1] == "s")
+      rijeci_koje_zavrsavaju_sa_s.push(ingr.ingredient_name);
+  }
+
+  for (var r of rijeci_koje_zavrsavaju_sa_s) {
+    var l = r.length;
+
+    for (var ingr of ingredients) {
+      if (
+        ingr.ingredient_name == r.slice(0, -1) ||
+        ingr.ingredient_name == r.slice(0, -2)
+      ) {
+        rijecnik[r] = ingr.ingredient_name;
+      }
+    }
+  }
+
+  res.json(rijecnik);
 };

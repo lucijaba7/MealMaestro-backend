@@ -18,10 +18,6 @@ const fridgeSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: "Ingredient",
           },
-          unit: {
-            type: String,
-            required: true,
-          },
           quantity: {
             type: Number,
             required: true,
@@ -30,6 +26,13 @@ const fridgeSchema = new mongoose.Schema({
       ],
     },
   ],
+});
+
+fridgeSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "fridge_items.ingredients_list.ingredient",
+  });
+  next();
 });
 
 const Fridge = mongoose.model("Fridge", fridgeSchema);

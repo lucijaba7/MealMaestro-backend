@@ -1,14 +1,12 @@
-// app.get("/fridge/:category", (req, res) => {
-//   let category = req.params.category;
-//   category = category.charAt(0).toUpperCase() + category.slice(1);
+const express = require("express");
+const ingredientMiddleware = require("../middleware/ingredientMiddleware");
 
-//   let username = req.query.username;
+const router = express.Router();
 
-//   // ovo ce radit Mongo
-//   let fridge = data.fridge.filter((x) => x.username == username);
-//   let fridge_items = fridge[0].fridge_items.filter(
-//     (x) => x.category == category
-//   );
+router.route("/").get(ingredientMiddleware.getFridge);
+router.route("/:id").patch(ingredientMiddleware.updateFridge);
 
-//   res.json(fridge_items);
-// });
+router.route("/:id/add").patch(ingredientMiddleware.addIngredient);
+router.route("/:id/remove").patch(ingredientMiddleware.removeIngredient);
+
+module.exports = router;

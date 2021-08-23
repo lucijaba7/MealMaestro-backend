@@ -3,6 +3,7 @@ const Ingredient = require("../schemas/ingredientSchema");
 
 const router = express.Router();
 
+//prebacit u glavni
 router.route("/").get((req, res) => {
   Ingredient.find()
     .then((result) => {

@@ -32,6 +32,10 @@ const groceryListSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      required_quantity: {
+        type: Number,
+        required: true,
+      },
     },
   ],
 });
@@ -39,7 +43,6 @@ const groceryListSchema = new mongoose.Schema({
 groceryListSchema.pre(/^find/, function (next) {
   this.populate({
     path: "list_items.ingredient",
-    select: "ingredient_name",
   });
   next();
 });
