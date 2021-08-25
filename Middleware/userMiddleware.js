@@ -49,6 +49,7 @@ exports.removeFromCustomRecipes = asyncHandler(async (req, res, next) => {
 });
 
 exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
+  console.log("AAAAAAAAAA");
   const userData = await User.findById(req.user._id);
   console.log(userData);
   let userSavedRecipes = [];
@@ -152,7 +153,7 @@ exports.getFollowersNumber = asyncHandler(async (req, res, next) => {
       },
     ],
     function (err, followersNumber) {
-      // console.log(followersNumber);
+      console.log(followersNumber);
       res.send(followersNumber);
     }
   );

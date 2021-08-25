@@ -42,7 +42,7 @@ exports.createWeeklyPlan = async (req, res, next) => {
     var saved_recipes = [];
 
     var queryObject = { meal_type: meal };
-    if (preferences.length) queryObject[tags] = { $all: preferences };
+    if (preferences.length) queryObject["tags"] = { $all: preferences };
 
     var meals = await Recipe.find(queryObject);
 
