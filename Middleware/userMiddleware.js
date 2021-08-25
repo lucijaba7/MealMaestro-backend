@@ -7,18 +7,31 @@ var mongoose = require("mongoose");
 
 exports.getCustomRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.user._id);
+  let userCustomRecipes = [];
+
+  if (req.query.start && req.query.end) {
+    const start = req.query.start;
+    const end = req.query.end;
+    console.log(start, "-", end);
+
+    userCustomRecipes = [...userData.custom_recipes.slice(start, end)];
+  } else {
+    userCustomRecipes = [...userData.custom_recipes];
+  }
 
   const customRecipes = await Promise.all(
-    userData.custom_recipes.map(async (recipe) => {
+    userCustomRecipes.map(async (recipe) => {
       return await Recipe.findById(recipe);
     })
   );
 
-  if (req.query.mealType)
+  if (req.query.mealType) {
     res.send(
-      customRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
+      customRecipes
+        .filter((recipe) => recipe.meal_type == req.query.mealType)
+        .slice(0, 10)
     );
-  else res.send(customRecipes);
+  } else res.send(customRecipes);
 });
 
 exports.removeFromCustomRecipes = asyncHandler(async (req, res, next) => {
@@ -37,18 +50,32 @@ exports.removeFromCustomRecipes = asyncHandler(async (req, res, next) => {
 
 exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.user._id);
+  console.log(userData);
+  let userSavedRecipes = [];
+
+  if (req.query.start && req.query.end) {
+    const start = req.query.start;
+    const end = req.query.end;
+    console.log(start, "-", end);
+
+    userSavedRecipes = [...userData.saved_recipes.slice(start, end)];
+  } else {
+    userSavedRecipes = [...userData.saved_recipes];
+  }
 
   const savedRecipes = await Promise.all(
-    userData.saved_recipes.map(async (recipe) => {
+    userSavedRecipes.map(async (recipe) => {
       return await Recipe.findById(recipe);
     })
   );
 
-  if (req.query.mealType)
+  if (req.query.mealType) {
     res.send(
-      savedRecipes.filter((recipe) => recipe.meal_type == req.query.mealType)
+      savedRecipes
+        .filter((recipe) => recipe.meal_type == req.query.mealType)
+        .slice(0, 10)
     );
-  else res.send(savedRecipes);
+  } else res.send(savedRecipes);
 });
 
 exports.saveRecipe = asyncHandler(async (req, res, next) => {
