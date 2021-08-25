@@ -152,7 +152,7 @@ exports.getFollowersNumber = asyncHandler(async (req, res, next) => {
       },
     ],
     function (err, followersNumber) {
-      console.log(followersNumber);
+      // console.log(followersNumber);
       res.send(followersNumber);
     }
   );

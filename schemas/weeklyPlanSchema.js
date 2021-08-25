@@ -32,6 +32,12 @@ weeklyPlanSchema.pre(/^find/, function (next) {
   });
   next();
 });
+weeklyPlanSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "grocery_list",
+  });
+  next();
+});
 
 const WeeklyPlan = mongoose.model("WeeklyPlan", weeklyPlanSchema);
 

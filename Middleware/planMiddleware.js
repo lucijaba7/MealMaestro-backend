@@ -4,6 +4,7 @@ const User = require("../schemas/userSchema");
 const Recipe = require("../schemas/recipeSchema");
 const Ingredient = require("../schemas/ingredientSchema");
 const GroceryList = require("../schemas/groceryListSchema");
+const Fridge = require("../schemas/fridgeSchema");
 
 const days = [
   "Monday",
@@ -34,23 +35,16 @@ exports.createWeeklyPlan = async (req, res, next) => {
   var dailyMeals = [];
 
   for (var day of days) {
-    dailyMeals.push({ day: day, meals: [] });
+    dailyMeals.push({ day: day, user: req.query.userId, meals: [] });
   }
 
   for (var meal of mealTypes) {
     var saved_recipes = [];
 
-    // FUS nacin
-    if (preferences.length) {
-      var meals = await Recipe.find({
-        meal_type: meal,
-        tags: { $all: ["vegan"] },
-      });
-    } else {
-      var meals = await Recipe.find({
-        meal_type: meal,
-      });
-    }
+    var queryObject = { meal_type: meal };
+    if (preferences.length) queryObject[tags] = { $all: preferences };
+
+    var meals = await Recipe.find(queryObject);
 
     for (var index in days) {
       var chosen_recipe;
@@ -59,13 +53,9 @@ exports.createWeeklyPlan = async (req, res, next) => {
         var i = Math.floor(Math.random() * meals.length);
         chosen_recipe = meals[i];
         saved_recipes.push(meals.splice(i, 1)[0]);
-      }
-      //kao..nije nasao ni jedan
-      // console.log("aaaaaaaaa fak");
-      else {
+      } else {
         var i = Math.floor(Math.random() * saved_recipes.length);
         chosen_recipe = saved_recipes[i];
-        // saved_recipe_ids.splice(index, 1);
       }
 
       dailyMeals[index].meals.push({ recipe: chosen_recipe._id });
@@ -133,7 +123,7 @@ exports.confirmPlan = async (req, res, next) => {
 
 exports.createGroceryList = async (req, res, next) => {
   const weeklyPlan = await WeeklyPlan.findById(req.params.id);
-
+  const fridge = await Fridge.findOne({ user: weeklyPlan.user });
   /////////////////////////// TREBA VIDIT STA IMA U FRIDGEU
 
   var list_items = [];
@@ -144,6 +134,7 @@ exports.createGroceryList = async (req, res, next) => {
       for (var ingredient of meal.recipe.ingredients_list) {
         const ingredient_id = ingredient.ingredient._id;
         const g_weight = findUnit(ingredient.ingredient, ingredient.unit);
+
         if (ingredient_quantity[ingredient_id]) {
           const new_value =
             ingredient_quantity[ingredient_id] + g_weight * ingredient.quantity;
@@ -153,6 +144,32 @@ exports.createGroceryList = async (req, res, next) => {
       }
     }
   }
+
+  if (fridge) {
+    for (var category of fridge.fridge_items) {
+      for (var item of category.ingredients_list) {
+        const existing_element = Object.keys(ingredient_quantity).filter(
+          (x) => x == String(item.ingredient._id)
+        )[0];
+
+        if (existing_element) {
+          var required_quantity = ingredient_quantity[existing_element];
+          var fridge_quantity = item.quantity;
+          var diff = required_quantity - fridge_quantity;
+
+          if (diff < 0) delete ingredient_quantity[existing_element];
+          else ingredient_quantity[existing_element] = diff;
+          // console.log(item.ingredient.ingredient_name);
+          // console.log(required_quantity - fridge_quantity);
+          // console.log(required_quantity);
+          // console.log(fridge_quantity);
+          // console.log(ingredient_quantity[existing_element]);
+          // console.log("++++++++++++++++++++++++++");
+        }
+      }
+    }
+  }
+
   for (var key in ingredient_quantity) {
     list_items.push({
       ingredient: key,
@@ -206,4 +223,30 @@ exports.updatee = async (req, res, next) => {
   }
 
   res.json(rijecnik);
+};
+
+exports.cookMeal = async (req, res, next) => {
+  //ne radi
+
+  var a = await DailyPlan.findByIdAndUpdate(
+    { _id: req.params.id },
+    { $set: { "meals.$[elem].cooked": true } },
+    { arrayFilters: [{ "elem.recipe._id": Object(req.query.recipeId) }] }
+  );
+
+  // var a = await Fridge.findOneAndUpdate(
+  //   { _id: req.params.id },
+  //   {
+  //     $set: {
+  //       "fridge_items.$[elem].ingredients_list": req.body,
+  //     },
+  //   },
+  //   { arrayFilters: [{ "elem.category": req.query.category }] }
+  // );
+
+  for (var b of a.meals) console.log(typeof b.recipe._id);
+  console.log(typeof Object(req.query.recipeId));
+  // oduzmi od fridge
+
+  res.send("ok");
 };
