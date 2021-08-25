@@ -17,6 +17,8 @@ router
     recipeMiddleware.createRecipe
   );
 
+router.route("/recommend").get(recipeMiddleware.recommendRecipes);
+
 router.route("/:id").get(recipeMiddleware.getRecipeById);
 
 module.exports = router;

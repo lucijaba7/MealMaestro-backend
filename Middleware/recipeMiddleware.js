@@ -77,3 +77,16 @@ exports.getRecipeById = async (req, res, next) => {
   const recipe = await Recipe.findById(req.params.id);
   res.send(recipe);
 };
+
+exports.recommendRecipes = async (req, res, next) => {
+  console.log("aaaaaaaaaaaaaaaaaaaWHA");
+  const userData = await User.findById(req.query.userId);
+  const preferences = userData.preferences;
+
+  var queryObject = { meal_type: req.query.mealType };
+  if (preferences.length) queryObject[tags] = { $all: preferences };
+
+  var recipes = await Recipe.find(queryObject).limit(10);
+
+  res.send(recipes);
+};
