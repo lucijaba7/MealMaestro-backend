@@ -3,7 +3,6 @@ import ErrorHandler from "../utils/errorHandler";
 import User from "../schemas/userSchema";
 import Avatar from "../schemas/avatarSchema";
 import Recipe from "../schemas/recipeSchema";
-var mongoose = require("mongoose");
 
 exports.getCustomRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.user._id);
@@ -49,9 +48,7 @@ exports.removeFromCustomRecipes = asyncHandler(async (req, res, next) => {
 });
 
 exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
-  console.log("AAAAAAAAAA");
   const userData = await User.findById(req.user._id);
-  console.log(userData);
   let userSavedRecipes = [];
 
   if (req.query.start && req.query.end) {

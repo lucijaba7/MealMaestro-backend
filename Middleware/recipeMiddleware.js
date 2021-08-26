@@ -1,5 +1,6 @@
 const Recipe = require("../schemas/recipeSchema");
 const User = require("../schemas/userSchema");
+const mongoose = require("mongoose");
 const upload = require("../middleware/imageUploadMiddleware");
 
 exports.getRecipes = (req, res, next) => {
@@ -53,39 +54,52 @@ exports.createRecipe = async (req, res, next) => {
   res.json({ recipe });
 };
 
-// exports.getRecipeId = async (req, res, next) => {
-//   const recipe = await Recipe.findById(req.params.id);
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       recipe
-//     }
-//   })
-// };
-
-// Recipe.findById(id, function (err, docs) {
-//   if (err){
-//       console.log(err);
-//   }
-//   else{
-//       console.log("Result : ", docs);
-//   }
-// });
-
 exports.getRecipeById = async (req, res, next) => {
   const recipe = await Recipe.findById(req.params.id);
   res.send(recipe);
 };
 
 exports.recommendRecipes = async (req, res, next) => {
-  const userData = await User.findById(req.query.userId);
+  const userData = await User.findById(req.user._id);
   const preferences = userData.preferences;
+  let queryObject = {};
 
-  var queryObject = { meal_type: req.query.mealType };
+  if (req.query.mealType) queryObject["meal_type"] = req.query.mealType;
   if (preferences.length) queryObject["tags"] = { $all: preferences };
+  //dodaj uvjet da recepti imaju rating 5??
 
-  var recipes = await Recipe.find(queryObject).limit(10);
+  var recipes = await Recipe.find(queryObject)
+    .skip(parseInt(req.query.offset))
+    .limit(10);
 
   res.send(recipes);
+};
+
+exports.rateRecipe = async (req, res, next) => {
+  const response = await Recipe.updateOne(
+    { _id: req.params.id },
+    { $push: { ratings: req.body } }
+  );
+
+  console.log(response);
+  // console.log(req.params.id);
+  // console.log(req.body);
+
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+};
+
+exports.getRatings = async (req, res, next) => {
+  Recipe.aggregate(
+    [
+      { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
+      { $unwind: "$ratings" },
+      { $group: { _id: null, rating: { $avg: "$ratings.rate" } } },
+    ],
+    function (err, recipeRating) {
+      res.send(recipeRating);
+    }
+  );
 };
