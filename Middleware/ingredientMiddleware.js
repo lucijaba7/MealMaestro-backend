@@ -96,14 +96,16 @@ exports.getFridge = async (req, res, next) => {
 };
 
 exports.createFridge = async (req, res, next) => {
-  console.log(req.user);
-  // const userFridge = Fridge.create();
+  const userFridge = await Fridge.create({
+    user: req.user._id,
+    fridge_items: [],
+  });
 
   res.json(userFridge);
 };
 
 exports.updateFridge = async (req, res, next) => {
-  var a = await Fridge.findOneAndUpdate(
+  var a = await Fridge.findByIdAndUpdate(
     { _id: req.params.id },
     {
       $set: {
@@ -118,16 +120,35 @@ exports.updateFridge = async (req, res, next) => {
 
 exports.addIngredient = async (req, res, next) => {
   const ingredient = await Ingredient.findById(req.body.newItem.ingredient);
+  const fridge = await Fridge.findById({ _id: req.params.id });
 
-  const data = await Fridge.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      $push: {
-        "fridge_items.$[elem].ingredients_list": req.body.newItem,
+  var categoryExists = fridge.fridge_items.filter(
+    (x) => x.category == ingredient.category
+  )[0];
+
+  if (categoryExists) {
+    await Fridge.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $push: {
+          "fridge_items.$[elem].ingredients_list": req.body.newItem,
+        },
       },
-    },
-    { arrayFilters: [{ "elem.category": ingredient.category }] }
-  );
+      { arrayFilters: [{ "elem.category": ingredient.category }] }
+    );
+  } else {
+    var newObj = {
+      category: ingredient.category,
+      ingredients_list: [req.body.newItem],
+    };
+    await Fridge.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $push: { fridge_items: newObj } }
+    );
+  }
 
-  res.json(data);
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
 };
