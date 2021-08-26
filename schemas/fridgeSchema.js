@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const fridgeSchema = new mongoose.Schema({
   user: {
-    // jos treba vidit ovo...
     type: mongoose.Schema.ObjectId,
     ref: "User",
   },

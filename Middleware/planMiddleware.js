@@ -81,7 +81,7 @@ exports.createWeeklyPlan = async (req, res, next) => {
 exports.deleteMeal = async (req, res, next) => {
   const plan = await DailyPlan.updateOne(
     { _id: req.params.id },
-    { $pull: { meals: { _id: req.body.mealPlanId } } }
+    { $pull: { meals: { _id: req.query.mealPlanId } } }
   );
 
   res.json({ plan: plan });
@@ -90,7 +90,7 @@ exports.deleteMeal = async (req, res, next) => {
 exports.addMeal = async (req, res, next) => {
   const plan = await DailyPlan.updateOne(
     { _id: req.params.id },
-    { $push: { meals: { recipe: req.body.recipeId } } }
+    { $push: { meals: { recipe: req.query.recipeId } } }
   );
 
   res.json({ plan: plan });
@@ -226,27 +226,51 @@ exports.updatee = async (req, res, next) => {
 };
 
 exports.cookMeal = async (req, res, next) => {
-  //ne radi
-
-  var a = await DailyPlan.findByIdAndUpdate(
+  var list = await DailyPlan.findByIdAndUpdate(
     { _id: req.params.id },
     { $set: { "meals.$[elem].cooked": true } },
-    { arrayFilters: [{ "elem.recipe._id": Object(req.query.recipeId) }] }
+    { arrayFilters: [{ "elem._id": req.query.mealPlanId }] }
   );
 
-  // var a = await Fridge.findOneAndUpdate(
-  //   { _id: req.params.id },
-  //   {
-  //     $set: {
-  //       "fridge_items.$[elem].ingredients_list": req.body,
-  //     },
-  //   },
-  //   { arrayFilters: [{ "elem.category": req.query.category }] }
-  // );
+  //cretate object of id, quantity and category of ing to udpate fridge
+  var ingredients_objects = [];
 
-  for (var b of a.meals) console.log(typeof b.recipe._id);
-  console.log(typeof Object(req.query.recipeId));
-  // oduzmi od fridge
+  for (var meal of list.meals) {
+    if (meal._id == req.query.mealPlanId) {
+      for (var ingredient of meal.recipe.ingredients_list) {
+        console.log(ingredient.ingredient.ingredient_name);
+        ingredients_objects.push({
+          id: ingredient.ingredient._id,
+          quantity:
+            ingredient.quantity *
+            findUnit(ingredient.ingredient, ingredient.unit),
+          category: ingredient.ingredient.category,
+        });
+      }
+    }
+  }
 
-  res.send("ok");
+  for (var ingredient of ingredients_objects) {
+    console.log(ingredient.quantity);
+    var fridgeUpdate = await Fridge.updateOne(
+      { user: list.user },
+      {
+        $inc: {
+          "fridge_items.$[elem].ingredients_list.$[item].quantity":
+            -ingredient.quantity,
+        },
+      },
+      {
+        arrayFilters: [
+          { "elem.category": ingredient.category },
+          {
+            "item.ingredient": ingredient.id,
+          },
+        ],
+      }
+    );
+    console.log(fridgeUpdate);
+  }
+
+  res.json(fridgeUpdate);
 };

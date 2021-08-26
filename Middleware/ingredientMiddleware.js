@@ -95,6 +95,13 @@ exports.getFridge = async (req, res, next) => {
   res.json(userFridge);
 };
 
+exports.createFridge = async (req, res, next) => {
+  console.log(req.user);
+  // const userFridge = Fridge.create();
+
+  res.json(userFridge);
+};
+
 exports.updateFridge = async (req, res, next) => {
   var a = await Fridge.findOneAndUpdate(
     { _id: req.params.id },
@@ -121,6 +128,6 @@ exports.addIngredient = async (req, res, next) => {
     },
     { arrayFilters: [{ "elem.category": ingredient.category }] }
   );
-  console.log("hii");
+
   res.json(data);
 };
