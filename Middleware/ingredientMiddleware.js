@@ -22,7 +22,7 @@ exports.getIngredientsIdFromName = async (req, res, next) => {
 };
 
 exports.getGroceryList = async (req, res, next) => {
-  const userId = req.query.userId;
+  const userId = req.user._id;
   const groceryList = await GroceryList.find({ user: userId, active: true });
   res.json(groceryList);
 };
@@ -88,7 +88,7 @@ exports.confirmGroceryList = async (req, res, next) => {
 };
 
 exports.getFridge = async (req, res, next) => {
-  const userId = req.query.userId;
+  const userId = req.user._id;
 
   const userFridge = await Fridge.find({ user: userId });
 

@@ -5,6 +5,7 @@ const Recipe = require("../schemas/recipeSchema");
 const Ingredient = require("../schemas/ingredientSchema");
 const GroceryList = require("../schemas/groceryListSchema");
 const Fridge = require("../schemas/fridgeSchema");
+const { getIngredientsIdFromName } = require("./ingredientMiddleware");
 
 const days = [
   "Monday",
@@ -19,7 +20,7 @@ const mealTypes = ["Breakfast", "Lunch", "Snack", "Dinner", "Dessert"];
 
 exports.getWeeklyPlan = (req, res, next) => {
   WeeklyPlan.findOne({
-    user: req.query.userId,
+    user: req.user._id,
     start_day: new Date(req.query.startDay),
   })
     .then((result) => {
@@ -29,13 +30,14 @@ exports.getWeeklyPlan = (req, res, next) => {
 };
 
 exports.createWeeklyPlan = async (req, res, next) => {
-  const userData = await User.findById(req.query.userId);
+  const userData = req.user;
+  // await User.findById(req.query.userId);
   const preferences = userData.preferences;
 
   var dailyMeals = [];
 
   for (var day of days) {
-    dailyMeals.push({ day: day, user: req.query.userId, meals: [] });
+    dailyMeals.push({ day: day, user: userData._id, meals: [] });
   }
 
   for (var meal of mealTypes) {
@@ -70,7 +72,7 @@ exports.createWeeklyPlan = async (req, res, next) => {
   );
 
   const weeklyPlan = await WeeklyPlan.create({
-    user: req.query.userId,
+    user: userData._id,
     start_day: new Date(req.query.startDay),
     daily_plans: daily_meals,
   });
@@ -195,34 +197,6 @@ exports.createGroceryList = async (req, res, next) => {
   );
 
   res.json(groceryList);
-};
-
-exports.updatee = async (req, res, next) => {
-  const ingredients = await Ingredient.find();
-
-  var rijeci_koje_zavrsavaju_sa_s = [];
-  var rijecnik = {};
-
-  for (var ingr of ingredients) {
-    var l = ingr.ingredient_name.length;
-    if (ingr.ingredient_name[l - 1] == "s")
-      rijeci_koje_zavrsavaju_sa_s.push(ingr.ingredient_name);
-  }
-
-  for (var r of rijeci_koje_zavrsavaju_sa_s) {
-    var l = r.length;
-
-    for (var ingr of ingredients) {
-      if (
-        ingr.ingredient_name == r.slice(0, -1) ||
-        ingr.ingredient_name == r.slice(0, -2)
-      ) {
-        rijecnik[r] = ingr.ingredient_name;
-      }
-    }
-  }
-
-  res.json(rijecnik);
 };
 
 exports.cookMeal = async (req, res, next) => {

@@ -3,20 +3,9 @@ const User = require("../schemas/userSchema");
 const mongoose = require("mongoose");
 const upload = require("../middleware/imageUploadMiddleware");
 
-exports.getRecipes = (req, res, next) => {
-  if (req.query.mealType)
-    Recipe.find({ meal_type: req.query.mealType })
-      .limit(10)
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => console.log(err));
-  else
-    Recipe.find() //.limit(10)
-      .then((result) => {
-        res.send(result);
-      })
-      .catch((err) => console.log(err));
+exports.getRecipes = async (req, res, next) => {
+  let recipes = await Recipe.find();
+  res.json(recipes);
 };
 
 exports.getImageUrl = async (req, res, next) => {
@@ -66,7 +55,6 @@ exports.recommendRecipes = async (req, res, next) => {
 
   if (req.query.mealType) queryObject["meal_type"] = req.query.mealType;
   if (preferences.length) queryObject["tags"] = { $all: preferences };
-  //dodaj uvjet da recepti imaju rating 5??
 
   var recipes = await Recipe.find(queryObject)
     .skip(parseInt(req.query.offset))

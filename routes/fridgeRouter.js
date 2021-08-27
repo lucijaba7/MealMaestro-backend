@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(ingredientMiddleware.getFridge)
+  .get(authMiddleware.protect, ingredientMiddleware.getFridge)
   .post(authMiddleware.protect, ingredientMiddleware.createFridge);
 
 router.route("/:id").patch(ingredientMiddleware.updateFridge);
