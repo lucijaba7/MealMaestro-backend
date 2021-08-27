@@ -8,11 +8,10 @@ const sendEmail = async () => {
 
   // 1) Create a transporter
   const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    service: "Sendgrid",
     auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
+      user: process.env.SENDGRID_USERNAME,
+      pass: process.env.SENDGRID_PASSWORD,
     },
   });
 
@@ -28,11 +27,11 @@ const sendEmail = async () => {
   ).format("YYYY-MM-DD");
 
   const emailOptions = {
-    from: "MealMaestro <mealMaestro@team.io>",
+    from: "MealMaestro <mealmaestro.team@gmail.com>",
     to: allEmails,
     subject: "New weekly plan",
     html:
-      "<div style='text-align: center'><h2><b>Hi there!</b></h2><p>It’s time to prepare for next week , please don't forget to generate your weekly plan.</p><p>Your MealMaestro</p> <img src='https://res.cloudinary.com/dtpfiawe9/image/upload/v1629222886/logo_xqyc36.png'><br> <br><a href='http://localhost:8080/plan/weekly?startDay=" +
+      "<div style='text-align: center'><h2><b>Hi there!</b></h2><p>It’s time to prepare for next week , please don't forget to generate your weekly plan.</p><p>Your MealMaestro</p> <img src='https://res.cloudinary.com/dtpfiawe9/image/upload/v1629222886/logo_xqyc36.png'><br> <br><a href='https://meal-maestro-frontend.vercel.app/plan/weekly?startDay=" +
       mondayDate +
       "'>Go to MealMaestro</a></div>",
   };

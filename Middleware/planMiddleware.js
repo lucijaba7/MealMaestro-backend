@@ -197,34 +197,6 @@ exports.createGroceryList = async (req, res, next) => {
   res.json(groceryList);
 };
 
-exports.updatee = async (req, res, next) => {
-  const ingredients = await Ingredient.find();
-
-  var rijeci_koje_zavrsavaju_sa_s = [];
-  var rijecnik = {};
-
-  for (var ingr of ingredients) {
-    var l = ingr.ingredient_name.length;
-    if (ingr.ingredient_name[l - 1] == "s")
-      rijeci_koje_zavrsavaju_sa_s.push(ingr.ingredient_name);
-  }
-
-  for (var r of rijeci_koje_zavrsavaju_sa_s) {
-    var l = r.length;
-
-    for (var ingr of ingredients) {
-      if (
-        ingr.ingredient_name == r.slice(0, -1) ||
-        ingr.ingredient_name == r.slice(0, -2)
-      ) {
-        rijecnik[r] = ingr.ingredient_name;
-      }
-    }
-  }
-
-  res.json(rijecnik);
-};
-
 exports.cookMeal = async (req, res, next) => {
   var list = await DailyPlan.findByIdAndUpdate(
     { _id: req.params.id },
