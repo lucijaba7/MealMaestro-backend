@@ -11,7 +11,6 @@ exports.getCustomRecipes = asyncHandler(async (req, res, next) => {
   if (req.query.start && req.query.end) {
     const start = req.query.start;
     const end = req.query.end;
-    console.log(start, "-", end);
 
     userCustomRecipes = [...userData.custom_recipes.slice(start, end)];
   } else {

@@ -13,12 +13,14 @@ import dailyPlanRouter from "./routes/dailyPlanRouter";
 import fridgeRouter from "./routes/fridgeRouter";
 import sendEmail from "./utils/email";
 const cron = require("node-cron");
+const compression = require("compression");
 
 const app = express();
 
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
+app.use(compression());
 
 app.use("/avatars", avatarRouter);
 app.use("/users", userRouter);
@@ -38,7 +40,6 @@ app.use(errorMiddleware);
 cron.schedule(
   "0 9 * * Sunday",
   () => {
-    console.log("sending");
     sendEmail();
   },
   {
