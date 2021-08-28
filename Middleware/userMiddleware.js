@@ -3,7 +3,6 @@ import ErrorHandler from "../utils/errorHandler";
 import User from "../schemas/userSchema";
 import Avatar from "../schemas/avatarSchema";
 import Recipe from "../schemas/recipeSchema";
-var mongoose = require("mongoose");
 
 exports.getCustomRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.user._id);
@@ -49,15 +48,13 @@ exports.removeFromCustomRecipes = asyncHandler(async (req, res, next) => {
 });
 
 exports.getSavedRecipes = asyncHandler(async (req, res, next) => {
-  console.log("AAAAAAAAAA");
   const userData = await User.findById(req.user._id);
-  console.log(userData);
+
   let userSavedRecipes = [];
 
   if (req.query.start && req.query.end) {
     const start = req.query.start;
     const end = req.query.end;
-    console.log(start, "-", end);
 
     userSavedRecipes = [...userData.saved_recipes.slice(start, end)];
   } else {
@@ -140,32 +137,28 @@ exports.getFollowersNumber = asyncHandler(async (req, res, next) => {
     [
       {
         $project: { following: 1 },
-      } /* select the following field as something we want to "send" to the next command in the chain */,
+      },
       {
         $unwind: "$following",
-      } /* this converts arrays into unique documents for counting */,
+      },
       {
         $group: {
-          /* execute 'grouping' */
           _id: "$following",
           count: { $sum: 1 },
         },
       },
     ],
     function (err, followersNumber) {
-      console.log(followersNumber);
       res.send(followersNumber);
     }
   );
 });
 
 exports.updateMyData = asyncHandler(async (req, res, next) => {
-  // 1) Create error if user posts password data
   if (req.body.newPassword || req.body.confirmPassword) {
     return next(new ErrorHandler("Action not allowed"), 400);
   }
 
-  // 2) Filter out unwanted fields that aren't allowed to be updated
   const filteredReqBody = filterObj(req.body, "about_you", "username", "email");
   if (req.body.avatar_url) {
     const avatarUrl = await Avatar.findOne(
@@ -176,7 +169,6 @@ exports.updateMyData = asyncHandler(async (req, res, next) => {
     filteredReqBody.avatar = avatarUrl._id;
   }
 
-  // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(
     req.user._id,
     filteredReqBody,
@@ -206,12 +198,18 @@ exports.getUserData = asyncHandler(async (req, res, next) => {
 
 exports.getUserRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findOne({ username: req.params.username });
+  let userCustomRecipes = [];
 
-  const userRecipes = await Promise.all(
-    userData.custom_recipes.map(async (recipe) => {
+  const start = req.query.start;
+  const end = req.query.end;
+
+  userCustomRecipes = [...userData.custom_recipes.slice(start, end)];
+
+  const customRecipes = await Promise.all(
+    userCustomRecipes.map(async (recipe) => {
       return await Recipe.findById(recipe);
     })
   );
 
-  res.send(userRecipes);
+  res.send(customRecipes);
 });

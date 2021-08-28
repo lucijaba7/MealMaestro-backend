@@ -1,4 +1,4 @@
-const express = require("express");
+import express from "express";
 import authMiddleware from "../middleware/authMiddleware";
 import userMiddleware from "../middleware/userMiddleware";
 

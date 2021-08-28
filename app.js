@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import ErrorHandler from "./utils/errorHandler";
 import errorMiddleware from "./middleware/errorMiddleware";
+import authMiddleware from "./middleware/authMiddleware";
 import avatarRouter from "./routes/avatarRouter";
 import ingredientRouter from "./routes/ingredientRouter";
 import userRouter from "./routes/userRouter";
@@ -13,15 +14,16 @@ import fridgeRouter from "./routes/fridgeRouter";
 import sendEmail from "./utils/email";
 const cron = require("node-cron");
 
-const app = express(); // instanciranje aplikacije
+const app = express();
 
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
 
 app.use("/avatars", avatarRouter);
-app.use("/ingredients", ingredientRouter);
 app.use("/users", userRouter);
+app.use(authMiddleware.protect);
+app.use("/ingredients", ingredientRouter);
 app.use("/recipes", recipeRouter);
 app.use("/weeklyPlan", weeklyPlanRouter);
 app.use("/dailyPlan", dailyPlanRouter);
@@ -33,9 +35,8 @@ app.all("*", (req, res, next) => {
 });
 app.use(errorMiddleware);
 
-// nezz ako je ispravno da to tu bude
 cron.schedule(
-  "0 9 * * Sunday", // nedjelja 9 ujutro
+  "0 9 * * Sunday",
   () => {
     console.log("sending");
     sendEmail();

@@ -1,12 +1,9 @@
-const express = require("express");
-const ingredientMiddleware = require("../middleware/ingredientMiddleware");
-const authMiddleware = require("../middleware/authMiddleware");
+import express from "express";
+import ingredientMiddleware from "../middleware/ingredientMiddleware";
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(authMiddleware.protect, ingredientMiddleware.getGroceryList);
+router.route("/").get(ingredientMiddleware.getGroceryList);
 
 router
   .route("/:id")

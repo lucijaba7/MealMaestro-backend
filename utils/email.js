@@ -1,12 +1,12 @@
 import nodemailer from "nodemailer";
 import moment from "moment";
-const User = require("../schemas/userSchema");
+import asyncHandler from "../utils/asyncHandler";
+import User from "../schemas/userSchema";
 
-const sendEmail = async () => {
+const sendEmail = asyncHandler(async () => {
   let result = await User.find().select(["-_id", "-avatar", "email"]);
   let allEmails = result.map((el) => el.email);
 
-  // 1) Create a transporter
   const transporter = nodemailer.createTransport({
     service: "Sendgrid",
     auth: {
@@ -17,10 +17,8 @@ const sendEmail = async () => {
 
   transporter.verify((err, success) => {
     if (err) console.error(err);
-    console.log("Your config is correct");
   });
 
-  // 2) Define the email options
   const saturdayDate = new Date();
   const mondayDate = moment(
     new Date(saturdayDate.getTime() + 24 * 60 * 60 * 1000)
@@ -36,8 +34,7 @@ const sendEmail = async () => {
       "'>Go to MealMaestro</a></div>",
   };
 
-  // 3) Actually send the email
   await transporter.sendMail(emailOptions);
-};
+});
 
 module.exports = sendEmail;

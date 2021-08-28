@@ -1,24 +1,8 @@
-const express = require("express");
-const Ingredient = require("../schemas/ingredientSchema");
+import express from "express";
+import ingredientMiddleware from "../middleware/ingredientMiddleware";
 
 const router = express.Router();
 
-//prebacit u glavni
-router.route("/").get((req, res) => {
-  Ingredient.find()
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => console.log(err));
-});
-
-// router.route("/:id").get((req, res) => {
-//   let ingredientId = req.params.id;
-//   Ingredient.find({ _id: ingredientId })
-//     .then((result) => {
-//       res.send(result);
-//     })
-//     .catch((err) => console.log(err));
-// });
+router.route("/").get(ingredientMiddleware.getAllIngredients);
 
 module.exports = router;

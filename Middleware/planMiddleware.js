@@ -1,11 +1,9 @@
-const WeeklyPlan = require("../schemas/weeklyPlanSchema");
-const DailyPlan = require("../schemas/dailyPlanSchema");
-const User = require("../schemas/userSchema");
-const Recipe = require("../schemas/recipeSchema");
-const Ingredient = require("../schemas/ingredientSchema");
-const GroceryList = require("../schemas/groceryListSchema");
-const Fridge = require("../schemas/fridgeSchema");
-const { getIngredientsIdFromName } = require("./ingredientMiddleware");
+import asyncHandler from "../utils/asyncHandler";
+import WeeklyPlan from "../schemas/weeklyPlanSchema";
+import DailyPlan from "../schemas/dailyPlanSchema";
+import Recipe from "../schemas/recipeSchema";
+import GroceryList from "../schemas/groceryListSchema";
+import Fridge from "../schemas/fridgeSchema";
 
 const days = [
   "Monday",
@@ -18,20 +16,34 @@ const days = [
 ];
 const mealTypes = ["Breakfast", "Lunch", "Snack", "Dinner", "Dessert"];
 
-exports.getWeeklyPlan = (req, res, next) => {
-  WeeklyPlan.findOne({
+function findUnit(ingredient, unit) {
+  if (unit == "g") return 1;
+  if (unit == "kg") return 1000;
+  for (var key in ingredient) {
+    if (
+      ["pieceMeasurements", "liquidMeasurements", "cupMeasurements"].includes(
+        key
+      )
+    ) {
+      for (var measure of ingredient[key]) {
+        if (measure.unit == unit) return measure.g_weight;
+      }
+    }
+  }
+  return 1;
+}
+
+exports.getWeeklyPlan = asyncHandler(async (req, res, next) => {
+  const weeklyPlan = await WeeklyPlan.findOne({
     user: req.user._id,
     start_day: new Date(req.query.startDay),
-  })
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((err) => console.log(err));
-};
+  });
 
-exports.createWeeklyPlan = async (req, res, next) => {
+  res.json(weeklyPlan);
+});
+
+exports.createWeeklyPlan = asyncHandler(async (req, res, next) => {
   const userData = req.user;
-  // await User.findById(req.query.userId);
   const preferences = userData.preferences;
 
   var dailyMeals = [];
@@ -77,56 +89,47 @@ exports.createWeeklyPlan = async (req, res, next) => {
     daily_plans: daily_meals,
   });
 
-  res.json(weeklyPlan);
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-exports.deleteMeal = async (req, res, next) => {
+exports.deleteMeal = asyncHandler(async (req, res, next) => {
   const plan = await DailyPlan.updateOne(
     { _id: req.params.id },
     { $pull: { meals: { _id: req.query.mealPlanId } } }
   );
 
-  res.json({ plan: plan });
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-exports.addMeal = async (req, res, next) => {
+exports.addMeal = asyncHandler(async (req, res, next) => {
   const plan = await DailyPlan.updateOne(
     { _id: req.params.id },
     { $push: { meals: { recipe: req.query.recipeId } } }
   );
 
-  res.json({ plan: plan });
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-function findUnit(ingredient, unit) {
-  if (unit == "g") return 1;
-  if (unit == "kg") return 1000;
-  for (var key in ingredient) {
-    if (
-      ["pieceMeasurements", "liquidMeasurements", "cupMeasurements"].includes(
-        key
-      )
-    ) {
-      for (var measure of ingredient[key]) {
-        if (measure.unit == unit) return measure.g_weight;
-      }
-    }
-  }
-  return 1;
-}
-
-exports.confirmPlan = async (req, res, next) => {
+exports.confirmPlan = asyncHandler(async (req, res, next) => {
   await WeeklyPlan.findByIdAndUpdate(
     { _id: req.params.id },
     { $set: { confirmed: true } }
   );
   next();
-};
+});
 
-exports.createGroceryList = async (req, res, next) => {
+exports.createGroceryList = asyncHandler(async (req, res, next) => {
   const weeklyPlan = await WeeklyPlan.findById(req.params.id);
   const fridge = await Fridge.findOne({ user: weeklyPlan.user });
-  /////////////////////////// TREBA VIDIT STA IMA U FRIDGEU
 
   var list_items = [];
   var ingredient_quantity = {};
@@ -161,12 +164,6 @@ exports.createGroceryList = async (req, res, next) => {
 
           if (diff < 0) delete ingredient_quantity[existing_element];
           else ingredient_quantity[existing_element] = diff;
-          // console.log(item.ingredient.ingredient_name);
-          // console.log(required_quantity - fridge_quantity);
-          // console.log(required_quantity);
-          // console.log(fridge_quantity);
-          // console.log(ingredient_quantity[existing_element]);
-          // console.log("++++++++++++++++++++++++++");
         }
       }
     }
@@ -180,7 +177,6 @@ exports.createGroceryList = async (req, res, next) => {
     });
   }
 
-  ///Stavi da su sve ostale grocery lists od usera ne aktivne
   await GroceryList.updateMany(
     { user: weeklyPlan.user._id },
     { $set: { active: false } }
@@ -196,23 +192,24 @@ exports.createGroceryList = async (req, res, next) => {
     { $set: { grocery_list: groceryList._id } }
   );
 
-  res.json(groceryList);
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-exports.cookMeal = async (req, res, next) => {
+exports.cookMeal = asyncHandler(async (req, res, next) => {
   var list = await DailyPlan.findByIdAndUpdate(
     { _id: req.params.id },
     { $set: { "meals.$[elem].cooked": true } },
     { arrayFilters: [{ "elem._id": req.query.mealPlanId }] }
   );
 
-  //cretate object of id, quantity and category of ing to udpate fridge
   var ingredients_objects = [];
 
   for (var meal of list.meals) {
     if (meal._id == req.query.mealPlanId) {
       for (var ingredient of meal.recipe.ingredients_list) {
-        console.log(ingredient.ingredient.ingredient_name);
         ingredients_objects.push({
           id: ingredient.ingredient._id,
           quantity:
@@ -225,7 +222,6 @@ exports.cookMeal = async (req, res, next) => {
   }
 
   for (var ingredient of ingredients_objects) {
-    console.log(ingredient.quantity);
     var fridgeUpdate = await Fridge.updateOne(
       { user: list.user },
       {
@@ -243,8 +239,10 @@ exports.cookMeal = async (req, res, next) => {
         ],
       }
     );
-    console.log(fridgeUpdate);
   }
 
-  res.json(fridgeUpdate);
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});

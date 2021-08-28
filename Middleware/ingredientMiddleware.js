@@ -1,8 +1,14 @@
-const Fridge = require("../schemas/fridgeSchema");
-const GroceryList = require("../schemas/groceryListSchema");
-const Ingredient = require("../schemas/ingredientSchema");
+import asyncHandler from "../utils/asyncHandler";
+import Fridge from "../schemas/fridgeSchema";
+import GroceryList from "../schemas/groceryListSchema";
+import Ingredient from "../schemas/ingredientSchema";
 
-exports.getIngredientsIdFromName = async (req, res, next) => {
+exports.getAllIngredients = asyncHandler(async (req, res, next) => {
+  const ingredients = await Ingredient.find();
+  res.send(ingredients);
+});
+
+exports.getIngredientsIdFromName = asyncHandler(async (req, res, next) => {
   var ingredients_list = [];
 
   for (var ingredient of req.body.ingredientsList) {
@@ -19,23 +25,26 @@ exports.getIngredientsIdFromName = async (req, res, next) => {
 
   req.body.ingredientsList = ingredients_list;
   next();
-};
+});
 
-exports.getGroceryList = async (req, res, next) => {
+exports.getGroceryList = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
   const groceryList = await GroceryList.find({ user: userId, active: true });
   res.json(groceryList);
-};
+});
 
-exports.updateGroceryList = async (req, res, next) => {
+exports.updateGroceryList = asyncHandler(async (req, res, next) => {
   await GroceryList.findByIdAndUpdate(
     { _id: req.params.id },
     { list_items: req.body }
   );
-  res.send("ok");
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-exports.confirmGroceryList = async (req, res, next) => {
+exports.confirmGroceryList = asyncHandler(async (req, res, next) => {
   const groceryList = await GroceryList.findByIdAndUpdate(
     { _id: req.params.id },
     { finished_shopping: true }
@@ -84,28 +93,31 @@ exports.confirmGroceryList = async (req, res, next) => {
     { fridge_items: fridge_items }
   );
 
-  res.json(final);
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-exports.getFridge = async (req, res, next) => {
+exports.getFridge = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
 
   const userFridge = await Fridge.find({ user: userId });
 
   res.json(userFridge);
-};
+});
 
-exports.createFridge = async (req, res, next) => {
+exports.createFridge = asyncHandler(async (req, res, next) => {
   const userFridge = await Fridge.create({
     user: req.user._id,
     fridge_items: [],
   });
 
   res.json(userFridge);
-};
+});
 
-exports.updateFridge = async (req, res, next) => {
-  var a = await Fridge.findByIdAndUpdate(
+exports.updateFridge = asyncHandler(async (req, res, next) => {
+  var fridge = await Fridge.findByIdAndUpdate(
     { _id: req.params.id },
     {
       $set: {
@@ -115,10 +127,13 @@ exports.updateFridge = async (req, res, next) => {
     { arrayFilters: [{ "elem.category": req.query.category }] }
   );
 
-  res.json(a);
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-exports.addIngredient = async (req, res, next) => {
+exports.addIngredient = asyncHandler(async (req, res, next) => {
   const ingredient = await Ingredient.findById(req.body.newItem.ingredient);
   const fridge = await Fridge.findById({ _id: req.params.id });
 
@@ -151,4 +166,4 @@ exports.addIngredient = async (req, res, next) => {
     status: "succes",
     data: null,
   });
-};
+});

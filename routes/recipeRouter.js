@@ -1,8 +1,7 @@
-const express = require("express");
-const multer = require("multer");
-import authMiddleware from "../middleware/authMiddleware";
-const recipeMiddleware = require("../middleware/recipeMiddleware");
-const ingredientMiddleware = require("../middleware/ingredientMiddleware");
+import express from "express";
+import multer from "multer";
+import recipeMiddleware from "../middleware/recipeMiddleware";
+import ingredientMiddleware from "../middleware/ingredientMiddleware";
 
 const router = express.Router();
 
@@ -18,14 +17,13 @@ router
     recipeMiddleware.createRecipe
   );
 
-router
-  .route("/recommend")
-  .get(authMiddleware.protect, recipeMiddleware.recommendRecipes);
+router.route("/recommend").get(recipeMiddleware.recommendRecipes);
 
 router.route("/:id").get(recipeMiddleware.getRecipeById);
+
 router
   .route("/:id/rating")
   .get(recipeMiddleware.getRatings)
-  .patch(authMiddleware.protect, recipeMiddleware.rateRecipe);
+  .patch(recipeMiddleware.rateRecipe);
 
 module.exports = router;

@@ -67,10 +67,6 @@ const userSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  servings: {
-    type: Number,
-    required: true,
-  },
 });
 
 userSchema.methods.isPasswordCorrect = async function (input, hash) {
@@ -92,11 +88,6 @@ userSchema.pre(/^find/, function (next) {
   next();
 });
 
-// userSchema.pre(/^find/, function (next) {
-//   this.find({ active: { $ne: false } });
-//   next();
-// });
-
 userSchema.methods.hasChangedPassword = function (JWTTimestamp) {
   if (this.password_changed_at) {
     const changed_at = parseInt(this.password_changed_at.getTime() / 1000, 10);
@@ -104,12 +95,6 @@ userSchema.methods.hasChangedPassword = function (JWTTimestamp) {
   }
   return false;
 };
-
-// userSchema.pre("save", function (next) {
-//   if (!this.isModified("password") || this.isNew) return next();
-//   this.password_changed_at = Date.now() - 1000;
-//   next();
-// });
 
 const User = mongoose.model("User", userSchema);
 

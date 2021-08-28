@@ -1,21 +1,20 @@
-const Recipe = require("../schemas/recipeSchema");
-const User = require("../schemas/userSchema");
+import asyncHandler from "../utils/asyncHandler";
+import Recipe from "../schemas/recipeSchema";
+import User from "../schemas/userSchema";
+import upload from "../middleware/imageUploadMiddleware";
 const mongoose = require("mongoose");
-const upload = require("../middleware/imageUploadMiddleware");
 
 exports.getRecipes = async (req, res, next) => {
   let recipes = await Recipe.find();
   res.json(recipes);
 };
 
-exports.getImageUrl = async (req, res, next) => {
-  // console.log(req.files);
+exports.getImageUrl = asyncHandler(async (req, res, next) => {
   let data = await upload(req.files[0]);
-  console.log(data.url);
   res.json({ url: data.url });
-};
+});
 
-exports.createRecipe = async (req, res, next) => {
+exports.createRecipe = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.body.userId);
 
   var data = {
@@ -33,22 +32,23 @@ exports.createRecipe = async (req, res, next) => {
 
   const recipe = await Recipe.create(data);
 
-  // ovo se moze iscupati al nez u koj middleware bi islo
-
   await User.updateOne(
     { _id: req.body.userId },
     { $push: { custom_recipes: recipe._id } }
   );
 
-  res.json({ recipe });
-};
+  res.status(200).json({
+    status: "succes",
+    data: null,
+  });
+});
 
-exports.getRecipeById = async (req, res, next) => {
+exports.getRecipeById = asyncHandler(async (req, res, next) => {
   const recipe = await Recipe.findById(req.params.id);
   res.send(recipe);
-};
+});
 
-exports.recommendRecipes = async (req, res, next) => {
+exports.recommendRecipes = asyncHandler(async (req, res, next) => {
   const userData = await User.findById(req.user._id);
   const preferences = userData.preferences;
   let queryObject = {};
@@ -61,25 +61,21 @@ exports.recommendRecipes = async (req, res, next) => {
     .limit(10);
 
   res.send(recipes);
-};
+});
 
-exports.rateRecipe = async (req, res, next) => {
+exports.rateRecipe = asyncHandler(async (req, res, next) => {
   const response = await Recipe.updateOne(
     { _id: req.params.id },
     { $push: { ratings: req.body } }
   );
 
-  console.log(response);
-  // console.log(req.params.id);
-  // console.log(req.body);
-
   res.status(200).json({
     status: "succes",
     data: null,
   });
-};
+});
 
-exports.getRatings = async (req, res, next) => {
+exports.getRatings = asyncHandler(async (req, res, next) => {
   Recipe.aggregate(
     [
       { $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
@@ -90,4 +86,4 @@ exports.getRatings = async (req, res, next) => {
       res.send(recipeRating);
     }
   );
-};
+});
