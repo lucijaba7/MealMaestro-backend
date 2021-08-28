@@ -1,4 +1,4 @@
-import express from "express";
+// import express from "express";
 import cors from "cors";
 import ErrorHandler from "./utils/errorHandler";
 import errorMiddleware from "./middleware/errorMiddleware";
@@ -13,14 +13,12 @@ import dailyPlanRouter from "./routes/dailyPlanRouter";
 import fridgeRouter from "./routes/fridgeRouter";
 import sendEmail from "./utils/email";
 const cron = require("node-cron");
-const compression = require("compression");
-
+const express = require("express");
 const app = express();
 
 app.use(cors());
 app.options("*", cors());
 app.use(express.json());
-app.use(compression());
 
 app.use("/avatars", avatarRouter);
 app.use("/users", userRouter);
