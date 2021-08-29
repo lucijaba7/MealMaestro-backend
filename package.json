@@ -4,8 +4,10 @@
   "description": "Meal Maestro",
   "main": "app.js",
   "scripts": {
-    "serve": "nodemon server.js --exec babel-node",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "node server.js --exec babel-node",
+    "heroku-postbuild": "npm install",
+    "start": "babel-node server.js"
   },
   "author": "Lucija Babić, Dejana Pivac, Lucia Vareško",
   "license": "ISC",
@@ -13,6 +15,7 @@
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.26.3",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -29,7 +32,6 @@
     "@babel/core": "^7.14.0",
     "@babel/node": "^7.13.13",
     "@babel/preset-env": "^7.14.1",
-    "cors": "^2.8.5",
     "nodemon": "^2.0.7"
   },
   "repository": {

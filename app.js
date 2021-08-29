@@ -1,4 +1,3 @@
-// import express from "express";
 import cors from "cors";
 import ErrorHandler from "./utils/errorHandler";
 import errorMiddleware from "./middleware/errorMiddleware";
