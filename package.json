@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node server.js --exec babel-node",
     "heroku-postbuild": "npm install",
-    "start": "babel-node server.js"
+    "start": "node server.js"
   },
   "author": "Lucija Babić, Dejana Pivac, Lucia Vareško",
   "license": "ISC",
