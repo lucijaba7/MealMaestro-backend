@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler";
 import Recipe from "../schemas/recipeSchema";
 import User from "../schemas/userSchema";
-import upload from "../middleware/imageUploadMiddleware";
+import upload from "../Middleware/imageUploadMiddleware";
 const mongoose = require("mongoose");
 
 exports.getRecipes = async (req, res, next) => {

@@ -1,5 +1,5 @@
 import express from "express";
-import ingredientMiddleware from "../middleware/ingredientMiddleware";
+import ingredientMiddleware from "../Middleware/ingredientMiddleware";
 
 const router = express.Router();
 

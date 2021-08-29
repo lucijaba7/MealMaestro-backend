@@ -1,6 +1,6 @@
 import cors from "cors";
 import ErrorHandler from "./utils/errorHandler";
-import authMiddleware from "./middleware/authMiddleware";
+import authMiddleware from "./Middleware/authMiddleware";
 import avatarRouter from "./routes/avatarRouter";
 import ingredientRouter from "./routes/ingredientRouter";
 import userRouter from "./routes/userRouter";
@@ -10,7 +10,7 @@ import groceryListRouter from "./routes/groceryListRouter";
 import dailyPlanRouter from "./routes/dailyPlanRouter";
 import fridgeRouter from "./routes/fridgeRouter";
 import sendEmail from "./utils/email";
-const errorMiddleware = require("./middleware/errorMiddleware");
+const errorMiddleware = require("./Middleware/errorMiddleware");
 const cron = require("node-cron");
 const express = require("express");
 const app = express();

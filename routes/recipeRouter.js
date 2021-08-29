@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
-import recipeMiddleware from "../middleware/recipeMiddleware";
-import ingredientMiddleware from "../middleware/ingredientMiddleware";
+import recipeMiddleware from "../Middleware/recipeMiddleware";
+import ingredientMiddleware from "../Middleware/ingredientMiddleware";
 
 const router = express.Router();
 

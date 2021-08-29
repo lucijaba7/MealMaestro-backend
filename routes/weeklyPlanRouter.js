@@ -1,6 +1,5 @@
 import express from "express";
-import planMiddleware from "../middleware/planMiddleware";
-import authMiddleware from "../middleware/authMiddleware";
+import planMiddleware from "../Middleware/planMiddleware";
 
 const router = express.Router();
 
