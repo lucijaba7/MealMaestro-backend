@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler";
 import Recipe from "../schemas/recipeSchema";
 import User from "../schemas/userSchema";
-import upload from "../Middleware/imageUploadMiddleware";
+import upload from "./imageUploadMiddleware";
 const mongoose = require("mongoose");
 
 exports.getRecipes = async (req, res, next) => {
@@ -83,7 +83,7 @@ exports.getRatings = asyncHandler(async (req, res, next) => {
       { $group: { _id: null, rating: { $avg: "$ratings.rate" } } },
     ],
     function (err, recipeRating) {
-      res.send(recipeRating);
+      res.json(recipeRating);
     }
   );
 });

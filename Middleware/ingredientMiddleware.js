@@ -5,7 +5,7 @@ import Ingredient from "../schemas/ingredientSchema";
 
 exports.getAllIngredients = asyncHandler(async (req, res, next) => {
   const ingredients = await Ingredient.find();
-  res.send(ingredients);
+  res.json(ingredients);
 });
 
 exports.getIngredientsIdFromName = asyncHandler(async (req, res, next) => {

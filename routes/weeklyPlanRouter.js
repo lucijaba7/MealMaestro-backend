@@ -1,15 +1,20 @@
 import express from "express";
 import planMiddleware from "../Middleware/planMiddleware";
+import authMiddleware from "../Middleware/authMiddleware";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(planMiddleware.getWeeklyPlan)
-  .post(planMiddleware.createWeeklyPlan);
+  .get(authMiddleware.protect, planMiddleware.getWeeklyPlan)
+  .post(authMiddleware.protect, planMiddleware.createWeeklyPlan);
 
 router
   .route("/:id/confirmPlan")
-  .post(planMiddleware.confirmPlan, planMiddleware.createGroceryList);
+  .post(
+    authMiddleware.protect,
+    planMiddleware.confirmPlan,
+    planMiddleware.createGroceryList
+  );
 
 module.exports = router;

@@ -1,15 +1,20 @@
 import express from "express";
 import ingredientMiddleware from "../Middleware/ingredientMiddleware";
+import authMiddleware from "../Middleware/authMiddleware";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get(ingredientMiddleware.getFridge)
-  .post(ingredientMiddleware.createFridge);
+  .get(authMiddleware.protect, ingredientMiddleware.getFridge)
+  .post(authMiddleware.protect, ingredientMiddleware.createFridge);
 
-router.route("/:id").patch(ingredientMiddleware.updateFridge);
+router
+  .route("/:id")
+  .patch(authMiddleware.protect, ingredientMiddleware.updateFridge);
 
-router.route("/:id/add").patch(ingredientMiddleware.addIngredient);
+router
+  .route("/:id/add")
+  .patch(authMiddleware.protect, ingredientMiddleware.addIngredient);
 
 module.exports = router;

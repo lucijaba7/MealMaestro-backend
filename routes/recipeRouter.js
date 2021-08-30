@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import recipeMiddleware from "../Middleware/recipeMiddleware";
 import ingredientMiddleware from "../Middleware/ingredientMiddleware";
+import authMiddleware from "../Middleware/authMiddleware";
 
 const router = express.Router();
 
@@ -11,19 +12,24 @@ router
 
 router
   .route("/")
-  .get(recipeMiddleware.getRecipes)
+  .get(authMiddleware.protect, recipeMiddleware.getRecipes)
   .post(
+    authMiddleware.protect,
     ingredientMiddleware.getIngredientsIdFromName,
     recipeMiddleware.createRecipe
   );
 
-router.route("/recommend").get(recipeMiddleware.recommendRecipes);
+router
+  .route("/recommend")
+  .get(authMiddleware.protect, recipeMiddleware.recommendRecipes);
 
-router.route("/:id").get(recipeMiddleware.getRecipeById);
+router
+  .route("/:id")
+  .get(authMiddleware.protect, recipeMiddleware.getRecipeById);
 
 router
   .route("/:id/rating")
-  .get(recipeMiddleware.getRatings)
-  .patch(recipeMiddleware.rateRecipe);
+  .get(authMiddleware.protect, recipeMiddleware.getRatings)
+  .patch(authMiddleware.protect, recipeMiddleware.rateRecipe);
 
 module.exports = router;
