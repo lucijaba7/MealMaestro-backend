@@ -9,3 +9,6 @@ Mentori: [doc.dr.sc. Nikola Tanković](https://www.notion.so/Kontakt-stranica-87
 ## Tehnologije
 * [Express JS](https://expressjs.com/) 
 * [MongoDB](https://www.mongodb.com/cloud/atlas)
+
+### Api specifikacija
+[MealMaestro API](https://documenter.getpostman.com/view/11551071/U16bx9Mw)
