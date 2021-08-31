@@ -1,6 +1,6 @@
 # MealMaestro-backend
 
-**Tim: Dejana Pivac, Lucija Babić i Lucia Vareško <br />**
+**Tim: Lucija Babić i Lucia Vareško <br />**
 
 [Fakultet informatike u Puli](https://fipu.unipu.hr/) <br />
 Kolegij: [Web aplikacije](https://www.notion.so/fiputreca/Web-aplikacije-7ba8350d498546a78812399024edac44) <br />
