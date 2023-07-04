@@ -1,4 +1,8 @@
-# MealMaestro-backend
+# MealMaestro-backend <br />
+
+[*Promo video*](https://www.youtube.com/watch?v=q30iUnWFU3I&t=129s) <br />
+
+
 
 **Tim: Lucija Babić i Lucia Vareško <br />**
 
